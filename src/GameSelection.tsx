@@ -1,9 +1,11 @@
 import * as React from 'react'
 
+import Regions from './state/models/enums/regions'
+
 const initialState = {
   authToken: '',
   playerName: '',
-  shard_id: null
+  regionId: null
 }
 
 type State = Readonly<typeof initialState>
@@ -25,7 +27,9 @@ export default class GameSelection extends React.Component<object, State> {
   }
 
   public changeRegion = (e: React.FormEvent<any>) => {
-
+    this.setState({
+      regionId: e.currentTarget.value
+    })
   }
 
   public changePlayerName = (e: React.FormEvent<any>) => {
@@ -41,6 +45,14 @@ export default class GameSelection extends React.Component<object, State> {
   }
 
   public render() {
+    let regionShards = []
+
+    for (let region in Regions) {
+      if (isNaN(Number(region))) {
+        regionShards.push(<option selected={region === this.state.regionId} key={region} value={region}>{region}</option>)
+      }
+    }
+
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
@@ -52,6 +64,9 @@ export default class GameSelection extends React.Component<object, State> {
             Player name:
             <input type="text" value={this.state.playerName} onChange={this.changePlayerName} />
           </label>
+          <select onChange={this.changeRegion}>
+            {regionShards}
+          </select>
           <input type="submit" value="Submit" />
         </form>
       </div>
