@@ -1,4 +1,4 @@
-enum Regions {
+enum Region {
   'xbox-as',
   'xbox-eu',
   'xbox-na',
@@ -14,4 +14,4 @@ enum Regions {
   'pc-as'
 }
 
-export default Regions
+export default Region
