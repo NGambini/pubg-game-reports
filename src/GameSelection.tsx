@@ -1,20 +1,27 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
 
 import Region from './state/playerInfo/regions'
+import * as PlayerInfoActions from './state/playerInfo/playerinfo.actions'
+import { Dispatch, bindActionCreators } from 'redux';
+import IStoreState from './state/IStoreState'
 
 const initialState = {
   authToken: '',
   playerName: '',
-  regionId: undefined
+  regionId: Region["pc-eu"]
 }
 
+type Props = {
+  setPlayerInfo: (token: string, playerName: string, regionId: Region) => void
+}
 type State = Readonly<typeof initialState>
 
-export default class GameSelection extends React.Component<object, State> {
+export default class GameSelectionInternal extends React.Component<Props, State> {
   readonly state: State = initialState
 
 
-  constructor(props: object, state: State) {
+  constructor(props: Props, state: State) {
     super(props, state);
 
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -24,6 +31,7 @@ export default class GameSelection extends React.Component<object, State> {
 
   public handleSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
+    this.props.setPlayerInfo(this.state.authToken, this.state.playerName, this.state.regionId)
   }
 
   public changeRegion = (e: React.FormEvent<any>) => {
@@ -49,7 +57,7 @@ export default class GameSelection extends React.Component<object, State> {
 
     for (let region in Region) {
       if (isNaN(Number(region))) {
-        regionShards.push(<option  key={region} value={region}>{region}</option>)
+        regionShards.push(<option key={region} value={region}>{region}</option>)
       }
     }
 
@@ -72,5 +80,10 @@ export default class GameSelection extends React.Component<object, State> {
       </div>
     )
   }
-
 }
+
+export const GameSelection = connect((state: IStoreState, ownProps: {}) => ({}),
+(dispatch: Dispatch) => bindActionCreators({
+  setPlayerInfo: (token: string, playerName: string, regionId: Region) =>
+    dispatch(PlayerInfoActions.setPlayerInfo(token, playerName, regionId))
+}, dispatch))
