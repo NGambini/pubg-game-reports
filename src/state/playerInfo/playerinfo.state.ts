@@ -9,5 +9,5 @@ export default interface PlayerInfoState {
 export const initialState: PlayerInfoState = {
   authToken: '',
   playerName: '',
-  regionId: Region["pc-as"]
+  regionId: Region["pc-eu"]
 }
