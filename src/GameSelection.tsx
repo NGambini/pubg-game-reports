@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import Region from './state/playerInfo/regions'
 import * as PlayerInfoActions from './state/playerInfo/playerinfo.actions'
-import { Dispatch, bindActionCreators } from 'redux';
+import { Dispatch } from 'redux';
 import IStoreState from './state/IStoreState'
 
 const initialState = {
@@ -17,7 +17,7 @@ type Props = {
 }
 type State = Readonly<typeof initialState>
 
-export default class GameSelectionInternal extends React.Component<Props, State> {
+export class GameSelectionInternal extends React.Component<Props, State> {
   readonly state: State = initialState
 
 
@@ -82,8 +82,21 @@ export default class GameSelectionInternal extends React.Component<Props, State>
   }
 }
 
-export const GameSelection = connect((state: IStoreState, ownProps: {}) => ({}),
-(dispatch: Dispatch) => bindActionCreators({
+interface StateFromProps {}
+
+interface DispatchFromProps {
+  setPlayerInfo: (token: string, playerName: string, regionId: Region) => void;
+}
+
+const mapStateToProps = (state: IStoreState) => ({})
+
+const mapDispatchToProps = (dispatch: Dispatch): DispatchFromProps => ({
   setPlayerInfo: (token: string, playerName: string, regionId: Region) =>
     dispatch(PlayerInfoActions.setPlayerInfo(token, playerName, regionId))
-}, dispatch))
+});
+
+export default connect<StateFromProps, DispatchFromProps, void>(
+  mapStateToProps,
+  mapDispatchToProps
+)(GameSelectionInternal)
+

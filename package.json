@@ -25,6 +25,7 @@
     "@types/react-dom": "^16.0.5",
     "@types/react-redux": "^5.0.18",
     "@types/react-router-dom": "^4.2.6",
+    "@types/react-router-redux": "^5.0.13",
     "typescript": "^2.8.3"
   }
 }

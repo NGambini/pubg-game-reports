@@ -20,8 +20,8 @@ class App extends React.Component {
           </header>
           <Router>
             <div>
-            <Route path="/choose-game" component={GameSelection} />
-            <Link to="/choose-game">choose game</Link>
+              <Route path="/choose-game" component={GameSelection} />
+              <Link to="/choose-game">choose game</Link>
             </div>
           </Router>
         </div>
