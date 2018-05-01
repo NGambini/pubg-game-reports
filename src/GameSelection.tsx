@@ -1,12 +1,13 @@
 import * as React from 'react'
+import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 
 import Region from './state/playerInfo/regions'
 import * as PlayerInfoActions from './state/playerInfo/playerinfo.actions'
 import * as MatchesActions from './state/matches/matches.actions'
-import { Dispatch } from 'redux'
+
 import IStoreState from './state/IStoreState'
-import store from './state/store'
+// import store from './state/store'
 
 const initialState = {
   authToken: '',
@@ -95,7 +96,7 @@ const mapStateToProps = (state: IStoreState) => ({})
 const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): DispatchFromProps => ({
   setPlayerInfo: (token: string, playerName: string, regionId: Region) => {
     dispatch(PlayerInfoActions.setPlayerInfo(token, playerName, regionId))
-    dispatch(MatchesActions.getPlayerMatches(dispatch, store.getState, null))
+    dispatch(MatchesActions.getPlayerMatches())
   }
 })
 
