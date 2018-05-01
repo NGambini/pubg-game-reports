@@ -1,9 +1,10 @@
-import { AxiosRequestConfig } from 'axios'
+import { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 import Region from '../playerInfo/regions'
 
 export enum MatchesActionKeys {
-  GET_PLAYER_MATCHES = 'GET_PLAYER_MATCHES'
+  GET_PLAYER_MATCHES = 'GET_PLAYER_MATCHES',
+  GET_PLAYER_MATCHES_SUCCESS = 'GET_PLAYER_MATCHES_SUCCESS'
 }
 
 export interface GetPlayerMatchesAction {
@@ -11,6 +12,11 @@ export interface GetPlayerMatchesAction {
   readonly payload: {
     request: AxiosRequestConfig
   }
+}
+
+export interface GetPlayerMatchesSuccessAction {
+  readonly type: MatchesActionKeys.GET_PLAYER_MATCHES_SUCCESS
+  readonly payload: AxiosResponse
 }
 
 export function getPlayerMatches(authToken: string, playerName: string, regionId: Region): GetPlayerMatchesAction {
@@ -25,6 +31,6 @@ export function getPlayerMatches(authToken: string, playerName: string, regionId
   }
 }
 
-type MatchesActions = GetPlayerMatchesAction
+type MatchesActions = GetPlayerMatchesAction | GetPlayerMatchesSuccessAction
 
 export default MatchesActions

@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import axiosMiddleware from 'redux-axios-middleware'
+import thunk from 'redux-thunk'
 import axios, { AxiosInstance } from 'axios'
 
 import rootReducer from './rootReducer'
@@ -21,7 +22,12 @@ const pubgApiClient: AxiosInstance = axios.create({ //all axios can be used, sho
 
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(axiosMiddleware(pubgApiClient)))
+  composeEnhancers(
+    applyMiddleware(
+      axiosMiddleware(pubgApiClient),
+      thunk
+    )
+  )
 )
 
 // export store singleton instance
