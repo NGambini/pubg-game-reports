@@ -11,7 +11,7 @@ const composeEnhancers = (
   window && window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']
 ) || compose
 
-const pubgApiClient: AxiosInstance = axios.create({ //all axios can be used, shown in axios documentation
+const pubgApiClient: AxiosInstance = axios.create({
   baseURL:'https://api.playbattlegrounds.com/',
   responseType: 'json',
   headers: {

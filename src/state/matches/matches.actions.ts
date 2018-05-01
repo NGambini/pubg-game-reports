@@ -1,6 +1,11 @@
+import { Dispatch } from 'redux';
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { ThunkAction } from 'redux-thunk'
 
-import Region from '../playerInfo/regions'
+
+// import Region from '../playerInfo/regions'
+import IStoreState from '../IStoreState'
+import { ActionCreator } from 'redux'
 
 export enum MatchesActionKeys {
   GET_PLAYER_MATCHES = 'GET_PLAYER_MATCHES',
@@ -19,18 +24,21 @@ export interface GetPlayerMatchesSuccessAction {
   readonly payload: AxiosResponse
 }
 
-export function getPlayerMatches(authToken: string, playerName: string, regionId: Region): GetPlayerMatchesAction {
-  return {
-    type: MatchesActionKeys.GET_PLAYER_MATCHES,
-    payload: {
-      request: {
-        method: 'GET',
-        url: `/shards/${regionId}/players?filter[playerNames]=${playerName}`
-      } as AxiosRequestConfig
-    }
+export const getPlayerMatches: ActionCreator<ThunkAction<void, IStoreState, {}>> = () => {
+  return (dispatch: Dispatch<IStoreState>, getState: () => IStoreState, extraArg: {}) => {
+    const shard = getState().playerInfo.regionId
+    const playerName = getState().playerInfo.playerName
+    dispatch({
+      type: MatchesActionKeys.GET_PLAYER_MATCHES,
+      payload: {
+        request: {
+          method: 'GET',
+          url: `/shards/${shard}/players?filter[playerNames]=${playerName}`
+        } as AxiosRequestConfig
+      }
+    })
   }
 }
-
 type MatchesActions = GetPlayerMatchesAction | GetPlayerMatchesSuccessAction
 
 export default MatchesActions
