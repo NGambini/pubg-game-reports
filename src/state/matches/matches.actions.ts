@@ -9,7 +9,9 @@ import { ActionCreator } from 'redux'
 
 export enum MatchesActionKeys {
   GET_PLAYER_MATCHES = 'GET_PLAYER_MATCHES',
-  GET_PLAYER_MATCHES_SUCCESS = 'GET_PLAYER_MATCHES_SUCCESS'
+  GET_PLAYER_MATCHES_SUCCESS = 'GET_PLAYER_MATCHES_SUCCESS',
+  GET_MATCH_DETAILED = 'GET_MATCH_DETAILED',
+  GET_MATCH_DETAILED_SUCCESS = 'GET_MATCH_DETAILED_SUCCESS'
 }
 
 export interface GetPlayerMatchesAction {
@@ -22,6 +24,20 @@ export interface GetPlayerMatchesAction {
 export interface GetPlayerMatchesSuccessAction {
   readonly type: MatchesActionKeys.GET_PLAYER_MATCHES_SUCCESS
   readonly payload: AxiosResponse
+}
+
+export interface GetMatchDetailedAction {
+  readonly type: MatchesActionKeys.GET_MATCH_DETAILED
+  readonly payload: {
+    request: AxiosRequestConfig
+  }
+}
+
+export interface GetMatchDetailedSuccessAction {
+  readonly type: MatchesActionKeys.GET_MATCH_DETAILED_SUCCESS
+  readonly payload: {
+    request: AxiosRequestConfig
+  }
 }
 
 export const getPlayerMatches: ActionCreator<ThunkAction<void, IStoreState, {}>> = () => {
@@ -39,6 +55,26 @@ export const getPlayerMatches: ActionCreator<ThunkAction<void, IStoreState, {}>>
     })
   }
 }
-type MatchesActions = GetPlayerMatchesAction | GetPlayerMatchesSuccessAction
+
+export const getMatchDetailed: ActionCreator<ThunkAction<void, IStoreState, {}>> = (matchId: string) => {
+  return (dispatch: Dispatch<IStoreState>, getState: () => IStoreState, extraArg: {}) => {
+    const shard = getState().playerInfo.regionId
+
+    dispatch({
+      type: MatchesActionKeys.GET_MATCH_DETAILED,
+      payload: {
+        request: {
+          method: 'GET',
+          url: `/shards/${shard}/matches/${matchId}`
+        } as AxiosRequestConfig
+      }
+    })
+  }
+}
+
+type MatchesActions = GetPlayerMatchesAction |
+                      GetPlayerMatchesSuccessAction |
+                      GetMatchDetailedAction |
+                      GetMatchDetailedSuccessAction
 
 export default MatchesActions
