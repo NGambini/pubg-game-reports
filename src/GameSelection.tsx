@@ -3,6 +3,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 
 import Region from './state/playerInfo/regions'
+import Match from './state/matches/match.model'
 import * as PlayerInfoActions from './state/playerInfo/playerinfo.actions'
 import * as MatchesActions from './state/matches/matches.actions'
 
@@ -20,11 +21,10 @@ type Props = {
 }
 type State = Readonly<typeof initialState>
 
-export class GameSelectionInternal extends React.Component<Props, State> {
+export class GameSelectionInternal extends React.Component<Props & StateFromProps, State> {
   readonly state: State = initialState
 
-
-  constructor(props: Props, state: State) {
+  constructor(props: Props & StateFromProps, state: State) {
     super(props, state);
 
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -79,19 +79,28 @@ export class GameSelectionInternal extends React.Component<Props, State> {
             {regionShards}
           </select>
           <input type="submit" value="Submit" />
+          <br/>
+          <br/>
+          { this.props.matches.map(m => <button key={m.id}>{m.id}</button>) }
         </form>
       </div>
     )
   }
 }
 
-interface StateFromProps {}
+interface StateFromProps {
+  matches: Array<Match>,
+  isLoading: boolean
+}
 
 interface DispatchFromProps {
   setPlayerInfo: (token: string, playerName: string, regionId: Region) => void;
 }
 
-const mapStateToProps = (state: IStoreState) => ({})
+const mapStateToProps = (state: IStoreState) => ({
+  matches: state.matches.matches,
+  isLoading: state.matches.isLoading
+})
 
 const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): DispatchFromProps => ({
   setPlayerInfo: (token: string, playerName: string, regionId: Region) => {
