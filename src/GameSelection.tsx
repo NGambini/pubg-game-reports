@@ -17,7 +17,8 @@ const initialState = {
 }
 
 type Props = {
-  setPlayerInfo: (token: string, playerName: string, regionId: Region) => void
+  setPlayerInfo: (token: string, playerName: string, regionId: Region) => void,
+  getMatchDetailed: (gameId: string) => void
 }
 type State = Readonly<typeof initialState>
 
@@ -30,6 +31,11 @@ export class GameSelectionInternal extends React.Component<Props & StateFromProp
     this.handleSubmit = this.handleSubmit.bind(this)
     this.changePlayerName = this.changePlayerName.bind(this)
     this.changeToken = this.changeToken.bind(this)
+    this.getMatchDetailed = this.getMatchDetailed.bind(this)
+  }
+
+  public getMatchDetailed(gameId: string) {
+    this.props.getMatchDetailed(gameId)
   }
 
   public handleSubmit = (e: React.FormEvent<any>) => {
@@ -81,7 +87,7 @@ export class GameSelectionInternal extends React.Component<Props & StateFromProp
           <input type="submit" value="Submit" />
           <br/>
           <br/>
-          { this.props.matches.map(m => <button key={m.id}>{m.id}</button>) }
+          { this.props.matches.map(m => <button onClick={() => this.getMatchDetailed(m.id)} key={m.id}>{m.id}</button>) }
         </form>
       </div>
     )
@@ -94,7 +100,8 @@ interface StateFromProps {
 }
 
 interface DispatchFromProps {
-  setPlayerInfo: (token: string, playerName: string, regionId: Region) => void;
+  setPlayerInfo: (token: string, playerName: string, regionId: Region) => void,
+  getMatchDetailed: (gameId: string) => void
 }
 
 const mapStateToProps = (state: IStoreState) => ({
@@ -106,6 +113,9 @@ const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): DispatchFromProps 
   setPlayerInfo: (token: string, playerName: string, regionId: Region) => {
     dispatch(PlayerInfoActions.setPlayerInfo(token, playerName, regionId))
     dispatch(MatchesActions.getPlayerMatches())
+  },
+  getMatchDetailed: (gameId: string) => {
+    dispatch(MatchesActions.getMatchDetailed(gameId))
   }
 })
 
