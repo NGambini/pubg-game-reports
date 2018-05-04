@@ -10,6 +10,8 @@ import * as MatchesActions from './state/matches/matches.actions'
 import IStoreState from './state/IStoreState'
 // import store from './state/store'
 
+import GameEntry from './components/selection/GameEntry'
+
 const initialState = {
   authToken: '',
   playerName: '',
@@ -22,10 +24,10 @@ type Props = {
 }
 type State = Readonly<typeof initialState>
 
-export class GameSelectionInternal extends React.Component<Props & StateFromProps, State> {
+export class GameSelectionInternal extends React.Component<Props & StateToProps, State> {
   readonly state: State = initialState
 
-  constructor(props: Props & StateFromProps, state: State) {
+  constructor(props: Props & StateToProps, state: State) {
     super(props, state);
 
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -87,19 +89,19 @@ export class GameSelectionInternal extends React.Component<Props & StateFromProp
           <input type="submit" value="Submit" />
           <br/>
           <br/>
-          { this.props.matches.map(m => <button onClick={() => this.getMatchDetailed(m.id)} key={m.id}>{m.id}</button>) }
+          { this.props.matches.map(m => <GameEntry key={m.id} gameId={m.id}/>) }
         </form>
       </div>
     )
   }
 }
 
-interface StateFromProps {
+interface StateToProps {
   matches: Array<Match>,
   isLoading: boolean
 }
 
-interface DispatchFromProps {
+interface DispatchToProps {
   setPlayerInfo: (token: string, playerName: string, regionId: Region) => void,
   getMatchDetailed: (gameId: string) => void
 }
@@ -109,7 +111,7 @@ const mapStateToProps = (state: IStoreState) => ({
   isLoading: state.matches.isLoading
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): DispatchFromProps => ({
+const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): DispatchToProps => ({
   setPlayerInfo: (token: string, playerName: string, regionId: Region) => {
     dispatch(PlayerInfoActions.setPlayerInfo(token, playerName, regionId))
     dispatch(MatchesActions.getPlayerMatches())
@@ -119,7 +121,7 @@ const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): DispatchFromProps 
   }
 })
 
-export default connect<StateFromProps, DispatchFromProps, void>(
+export default connect<StateToProps, DispatchToProps, void>(
   mapStateToProps,
   mapDispatchToProps
 )(GameSelectionInternal)

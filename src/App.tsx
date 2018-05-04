@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
 import GameSelection from './GameSelection'
+import Game from './components/game/Game'
 import store from './state/store'
 
 import './App.css'
@@ -21,6 +22,7 @@ class App extends React.Component {
           <Router>
             <div>
               <Route path="/choose-game" component={GameSelection} />
+              <Route path="/game/:id" component={Game} />
               <Link to="/choose-game">choose game</Link>
             </div>
           </Router>
