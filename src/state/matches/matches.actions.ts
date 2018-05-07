@@ -11,7 +11,8 @@ export enum MatchesActionKeys {
   GET_PLAYER_MATCHES = 'GET_PLAYER_MATCHES',
   GET_PLAYER_MATCHES_SUCCESS = 'GET_PLAYER_MATCHES_SUCCESS',
   GET_MATCH_DETAILED = 'GET_MATCH_DETAILED',
-  GET_MATCH_DETAILED_SUCCESS = 'GET_MATCH_DETAILED_SUCCESS'
+  GET_MATCH_DETAILED_SUCCESS = 'GET_MATCH_DETAILED_SUCCESS',
+  SET_ACTIVE_MATCH = 'SET_ACTIVE_MATCH'
 }
 
 export interface GetPlayerMatchesAction {
@@ -37,6 +38,13 @@ export interface GetMatchDetailedSuccessAction {
   readonly type: MatchesActionKeys.GET_MATCH_DETAILED_SUCCESS
   readonly payload: {
     request: AxiosRequestConfig
+  }
+}
+
+export interface SetActiveMatchAction {
+  readonly type: MatchesActionKeys.SET_ACTIVE_MATCH,
+  readonly payload: {
+    matchId: string
   }
 }
 
@@ -72,9 +80,19 @@ export const getMatchDetailed: ActionCreator<ThunkAction<void, IStoreState, {}>>
   }
 }
 
+export function setActiveMatch(matchId: string): SetActiveMatchAction {
+  return {
+    type: MatchesActionKeys.SET_ACTIVE_MATCH,
+    payload: {
+      matchId: matchId
+    }
+  }
+}
+
 type MatchesActions = GetPlayerMatchesAction |
                       GetPlayerMatchesSuccessAction |
                       GetMatchDetailedAction |
-                      GetMatchDetailedSuccessAction
+                      GetMatchDetailedSuccessAction | 
+                      SetActiveMatchAction
 
 export default MatchesActions

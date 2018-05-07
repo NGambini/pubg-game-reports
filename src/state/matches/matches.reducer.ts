@@ -8,6 +8,8 @@ export default function matchesReducer(state: MatchesState = initialState, actio
     case MatchesActionKeys.GET_PLAYER_MATCHES_SUCCESS:
       const matches = action.payload.data.data[0].relationships.matches.data
       return {...state, matches: matches, isLoading: false}
+    case MatchesActionKeys.SET_ACTIVE_MATCH:
+      return {...state, current: action.payload.matchId}
     case MatchesActionKeys.GET_MATCH_DETAILED_SUCCESS:
       return state
     default:
