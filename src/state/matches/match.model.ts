@@ -1,4 +1,5 @@
-import Region from "../playerInfo/regions";
+import Region from '../playerInfo/regions'
+import TelemetryEvent from './telemetry/telemetry.model'
 
 export interface ParticipantStatistics {
   DBNOs: number,
@@ -69,8 +70,7 @@ export default interface Match {
       createdAt: Date,
       mapName: string, // todo map enum
       duration: number,
-      gameMode: string,
-      name: "D2P2"
+      gameMode: string
     },
     relationships: {
       rosters: any,
@@ -79,7 +79,8 @@ export default interface Match {
       }
     } // will be used for understanding relations between players (teams)
   }
-  included: Array<MatchIncluded> //all rosters and players without nesting
+  included: Array<MatchIncluded>, //all rosters and players without nesting
+  telemetry: Array<TelemetryEvent> // all game events
 }
 
 export function getTelemetryUrl(match: Match): string {
