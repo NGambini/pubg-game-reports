@@ -3,12 +3,10 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { RouteComponentProps, withRouter } from 'react-router'
 
-import Match, { getTelemetryUrl } from '../../state/matches/match.model'
+import Match, { getTelemetryUrl, isMatchFetched, isMatchTelemetryFetched } from '../../state/matches/match.model'
 import * as MatchesActions from '../../state/matches/matches.actions'
 
 import IStoreState from '../../state/IStoreState'
-
-// import store from './state/store'
 
 interface OwnProps {
 }
@@ -18,9 +16,9 @@ interface State {
 }
 
 interface DispatchToProps {
-  setCurrentMatch: (gameId: string) => void,
-  getMatchDetailed: (gameId: string) => void,
-  getMatchTelemetry: (gameId: string) => void,
+  setCurrentMatch: (matchId: string) => void,
+  getMatchDetailed: (matchId: string) => void,
+  getMatchTelemetry: (match: Match) => void,
 }
 
 interface StateToProps {
@@ -45,14 +43,16 @@ export class Game extends React.Component<Props, State> {
 
   public getMatchTelemetry() {
     console.log("getting match telemetry from url : ", getTelemetryUrl(this.props.displayedMatch))
-    this.props.getMatchTelemetry(getTelemetryUrl(this.props.displayedMatch))
+    this.props.getMatchTelemetry(this.props.displayedMatch)
   }
 
   public render() {
     return (<div>
       game detail view
       <br />
-      <button onClick={this.getMatchTelemetry} > get game telemetry</button>
+      {isMatchFetched(this.props.displayedMatch) && !isMatchTelemetryFetched(this.props.displayedMatch) &&
+        <button onClick={this.getMatchTelemetry} > get game telemetry</button>
+      }
     </div>)
   }
 
@@ -66,15 +66,15 @@ const mapStateToProps = (state: IStoreState): StateToProps => ({
   isLoading: true
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): DispatchToProps => ({
-  setCurrentMatch: (gameId: string) => {
-    dispatch(MatchesActions.setCurrentMatch(gameId))
+const mapDispatchToProps = (dispatch: Dispatch<IStoreState>) => ({
+  setCurrentMatch: (matchId: string) => {
+    dispatch(MatchesActions.setCurrentMatch(matchId))
   },
-  getMatchDetailed: (gameId: string) => {
-    dispatch(MatchesActions.getMatchDetailed(gameId))
+  getMatchDetailed: (matchId: string) => {
+    dispatch(MatchesActions.getMatchDetailed(matchId))
   },
-  getMatchTelemetry: (gameId: string) => {
-    dispatch(MatchesActions.getMatchDetailed(gameId))
+  getMatchTelemetry: (match: Match) => {
+    dispatch(MatchesActions.getMatchTelemetry(match))
   }
 })
 

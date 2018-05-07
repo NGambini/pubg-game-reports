@@ -12,7 +12,6 @@ const composeEnhancers = (
 ) || compose
 
 const pubgApiClient: AxiosInstance = axios.create({
-  baseURL:'https://api.playbattlegrounds.com/',
   responseType: 'json',
   headers: {
     'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI4ZDg3ODMyMC0yYWU4LTAxMzYtOGU1MS0wN2YzZTFlZWIzZmMiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNTI0NjgyNzAzLCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6InJlYWN0LXB1YmctdmlzdWFsaXplciIsInNjb3BlIjoiY29tbXVuaXR5IiwibGltaXQiOjEwfQ.D707fLxSqaDgm2bYhQr5luTTdQogSISO11gTuGqtKZQ',

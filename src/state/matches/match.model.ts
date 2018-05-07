@@ -84,7 +84,18 @@ export default interface Match {
 }
 
 export function getTelemetryUrl(match: Match): string {
+  console.log("trying to get telemetry url from match obj : ", match)
   const telemetryId = match && match.data.relationships.assets.data && match.data.relationships.assets.data[0].id
  
   return telemetryId ? (match.included.find(i => i.id === telemetryId).attributes as TelemetryAttributes).URL : null
+}
+
+// do we have match detail or just the id from GET_ALL_MATCHES ?
+export function isMatchFetched(match: Match): boolean {
+  return match &&  match.data != undefined && match.data != null
+}
+
+// do we have the match telemetry ?
+export function isMatchTelemetryFetched(match: Match): boolean {
+  return match && match.data != undefined && match.telemetry != null && match.telemetry.length > 0
 }
