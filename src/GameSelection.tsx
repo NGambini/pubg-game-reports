@@ -107,7 +107,7 @@ interface DispatchToProps {
 }
 
 const mapStateToProps = (state: IStoreState) => ({
-  matches: state.matches.matches,
+  matches: Object.keys(state.matches.matches).map((k) => state.matches.matches[k]),
   isLoading: state.matches.isLoading
 })
 

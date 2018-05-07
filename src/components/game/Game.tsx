@@ -62,7 +62,7 @@ export class Game extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: IStoreState): StateToProps => ({
-  displayedMatch: state.matches.matches.find(m => m.id === state.matches.current),
+  displayedMatch: state.matches.matches[state.matches.current],
   isLoading: true
 })
 
