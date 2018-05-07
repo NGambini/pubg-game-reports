@@ -22,7 +22,7 @@ class App extends React.Component {
           <Router>
             <div>
               <Route path="/choose-game" component={GameSelection} />
-              <Route path="/game/:id" component={Game} />
+              <Route path="/game/:gameId" component={Game} />
               <Link to="/choose-game">choose game</Link>
             </div>
           </Router>

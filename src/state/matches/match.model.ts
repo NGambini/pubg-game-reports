@@ -42,11 +42,16 @@ export interface RosterAttributes {
   shardId: string
 }
 
+export interface TelemetryAttributes {
+  name: string,
+  createdAt: Date,
+  URL: string
+}
 
 export interface MatchIncluded {
   type: string,
   id: string,
-  attributes: ParticipantAttributes | RosterAttributes,
+  attributes: ParticipantAttributes | RosterAttributes | TelemetryAttributes,
   relationships: {
     participants: {
       data: Array<{id: string, type: string}>
@@ -67,9 +72,18 @@ export default interface Match {
       gameMode: string,
       name: "D2P2"
     },
-    relationships: {} // will be used for understanding relations between players (teams)
-    included: Array<MatchIncluded> //all rosters and players without nesting
-
-
+    relationships: {
+      rosters: any,
+      assets: {
+        data: Array<{type: 'asset', id: string}>
+      }
+    } // will be used for understanding relations between players (teams)
   }
+  included: Array<MatchIncluded> //all rosters and players without nesting
+}
+
+export function getTelemetryUrl(match: Match): string {
+  const telemetryId = match && match.data.relationships.assets.data && match.data.relationships.assets.data[0].id
+ 
+  return telemetryId ? (match.included.find(i => i.id === telemetryId).attributes as TelemetryAttributes).URL : null
 }

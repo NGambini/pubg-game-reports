@@ -28,7 +28,7 @@ export class GameSelectionInternal extends React.Component<Props & StateToProps,
   readonly state: State = initialState
 
   constructor(props: Props & StateToProps, state: State) {
-    super(props, state);
+    super(props, state)
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.changePlayerName = this.changePlayerName.bind(this)
