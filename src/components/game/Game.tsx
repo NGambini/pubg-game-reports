@@ -8,6 +8,8 @@ import * as MatchesActions from '../../state/matches/matches.actions'
 
 import IStoreState from '../../state/IStoreState'
 
+import Heatmap from './heatmap/Heatmap'
+
 interface OwnProps {
 }
 
@@ -42,7 +44,6 @@ export class Game extends React.Component<Props, State> {
   }
 
   public getMatchTelemetry() {
-    console.log("getting match telemetry from url : ", getTelemetryUrl(this.props.displayedMatch))
     this.props.getMatchTelemetry(this.props.displayedMatch)
   }
 
@@ -50,9 +51,10 @@ export class Game extends React.Component<Props, State> {
     return (<div>
       game detail view
       <br />
-      {1 == 1 &&
+      {
         <button onClick={this.getMatchTelemetry} > get game telemetry</button>
       }
+      <Heatmap style={{'width': '200px', 'height': '200px'}} data={{ 'data': [{ x: 10, y: 15, value: 5}]}} />
     </div>)
   }
 
