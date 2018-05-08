@@ -8,10 +8,8 @@ import Match from './match.model'
 // so our code works either after GET_ALL_MATCHES OR GET_DETAILED_MATCH
 function matchFromObject(data: object): Match {
   const ret = data as Match
-  console.log("in matchfrom object before", ret)
   ret.id = ret.data.id
 
-  console.log("in matchfrom object after", ret)
   return ret
 }
 
@@ -26,18 +24,17 @@ export default function matchesReducer(state: MatchesState = initialState, actio
           indexed[match.id] = match
           return indexed
         }, {})
-
       return { ...state, matches: indexedMatches, isLoading: false }
     case MatchesActionKeys.SET_CURRENT_MATCH:
       return { ...state, current: action.payload.matchId }
     case MatchesActionKeys.GET_MATCH_DETAILED_SUCCESS:
+      const match = matchFromObject(action.payload.data)
       return update(state, {
-        matches: {// TODO : conditionally set or merge depending on null check
-          [action.payload.data.id]: { $merge: matchFromObject(action.payload.data) }
+        matches: {
+          [match.id]: { $set: match }
         }
       })
     case MatchesActionKeys.GET_MATCH_TELEMETRY_SUCCESS:
-      console.log("my key is : ", action.payload.config.params['matchId'])
       return update(state, {
         matches: {
           [action.payload.config.params['matchId']]: {

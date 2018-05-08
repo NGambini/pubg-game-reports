@@ -3,7 +3,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { RouteComponentProps, withRouter } from 'react-router'
 
-import Match, { getTelemetryUrl, isMatchFetched, isMatchTelemetryFetched } from '../../state/matches/match.model'
+import Match, { getTelemetryUrl } from '../../state/matches/match.model'
 import * as MatchesActions from '../../state/matches/matches.actions'
 
 import IStoreState from '../../state/IStoreState'
@@ -26,7 +26,7 @@ interface StateToProps {
   isLoading: boolean
 }
 
-type Props = OwnProps & DispatchToProps & StateToProps & RouteComponentProps<{gameId: string}>
+type Props = OwnProps & DispatchToProps & StateToProps & RouteComponentProps<{ gameId: string }>
 
 export class Game extends React.Component<Props, State> {
   constructor(props: Props, state: State) {
@@ -50,7 +50,7 @@ export class Game extends React.Component<Props, State> {
     return (<div>
       game detail view
       <br />
-      {isMatchFetched(this.props.displayedMatch) && !isMatchTelemetryFetched(this.props.displayedMatch) &&
+      {1 == 1 &&
         <button onClick={this.getMatchTelemetry} > get game telemetry</button>
       }
     </div>)
@@ -61,10 +61,14 @@ export class Game extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: IStoreState): StateToProps => ({
-  displayedMatch: state.matches.matches[state.matches.current],
-  isLoading: true
-})
+const mapStateToProps = (state: IStoreState) => {
+  console.log(state)
+
+  return {
+    displayedMatch: state.matches.matches[state.matches.current],
+    isLoading: true
+  }
+}
 
 const mapDispatchToProps = (dispatch: Dispatch<IStoreState>) => ({
   setCurrentMatch: (matchId: string) => {
