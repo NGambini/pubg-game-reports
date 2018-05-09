@@ -10,7 +10,8 @@ class ReactHeatmap extends Component {
     this.state = { cfg: null }
   }
 
-  componentDidMount() {
+  // TODO optimize using shouldupdate etc...
+  componentDidUpdate() {
     const { style, data, config } = this.props;
     let c = config || {}
     let _container = ReactDOM.findDOMNode(this);
@@ -35,7 +36,7 @@ class ReactHeatmap extends Component {
 
   render() {
     return (
-      <div ref="react-heatmap"></div>
+      <div className={'map-' + this.props.background} ref="react-heatmap"></div>
     )
   }
 }

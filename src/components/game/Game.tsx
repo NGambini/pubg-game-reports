@@ -3,12 +3,13 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { RouteComponentProps, withRouter } from 'react-router'
 
-import Match, { getTelemetryUrl } from '../../state/matches/match.model'
+import Match, { getEventsOfTypeAsHeatmapDatum } from '../../state/matches/match.model'
 import * as MatchesActions from '../../state/matches/matches.actions'
 
 import IStoreState from '../../state/IStoreState'
 
 import Heatmap from './heatmap/Heatmap'
+import TelemetryEventType from '../../state/matches/telemetry/telemetry.enum';
 
 interface OwnProps {
 }
@@ -54,7 +55,9 @@ export class Game extends React.Component<Props, State> {
       {
         <button onClick={this.getMatchTelemetry} > get game telemetry</button>
       }
-      <Heatmap style={{'width': '200px', 'height': '200px'}} data={{ 'data': [{ x: 10, y: 15, value: 5}]}} />
+      <Heatmap background="erangel" style={{'width': '600px', 'height': '600px'}}
+      data={{ 'data': getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerKill)}} />
+      {/* <Heatmap background="erangel" style={{'width': '600px', 'height': '600px'}} data={{ 'data': [{ x: 10, y: 15, value: 5}]}} /> */}
     </div>)
   }
 
@@ -63,14 +66,10 @@ export class Game extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: IStoreState) => {
-  console.log(state)
-
-  return {
-    displayedMatch: state.matches.matches[state.matches.current],
-    isLoading: true
-  }
-}
+const mapStateToProps = (state: IStoreState) => ({
+  displayedMatch: state.matches.matches[state.matches.current],
+  isLoading: true
+})
 
 const mapDispatchToProps = (dispatch: Dispatch<IStoreState>) => ({
   setCurrentMatch: (matchId: string) => {

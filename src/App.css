@@ -26,3 +26,13 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.map-erangel {
+  background-image: url('./assets/maps/erangel.jpg');
+  /* TODO dynamic */
+  width: 600px;
+  height: 600px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;  
+}

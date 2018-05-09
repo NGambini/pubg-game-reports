@@ -1,5 +1,8 @@
+import { Deserialize } from 'cerialize'
+
 import Region from '../playerInfo/regions'
-import TelemetryEvent from './telemetry/telemetry.model'
+import TelemetryEvent, { HeatmapData, LogPlayerKill } from './telemetry/telemetry.model'
+import TelemetryEventType from './telemetry/telemetry.enum'
 
 export interface ParticipantStatistics {
   DBNOs: number,
@@ -55,7 +58,7 @@ export interface MatchIncluded {
   attributes: ParticipantAttributes | RosterAttributes | TelemetryAttributes,
   relationships: {
     participants: {
-      data: Array<{id: string, type: string}>
+      data: Array<{ id: string, type: string }>
     }
   }
 }
@@ -75,27 +78,43 @@ export default interface Match {
     relationships: {
       rosters: any,
       assets: {
-        data: Array<{type: 'asset', id: string}>
+        data: Array<{ type: 'asset', id: string }>
       }
     } // will be used for understanding relations between players (teams)
   }
   included: Array<MatchIncluded>, //all rosters and players without nesting
-  telemetry: Array<TelemetryEvent> // all game events
+  telemetry: Array<TelemetryEvent<TelemetryEventType>> // all game events
 }
 
+//TODO move into selectors file
+
 export function getTelemetryUrl(match: Match): string {
-  console.log("trying to get telemetry url from match obj : ", match)
   const telemetryId = match && match.data.relationships.assets.data && match.data.relationships.assets.data[0].id
- 
+
   return telemetryId ? (match.included.find(i => i.id === telemetryId).attributes as TelemetryAttributes).URL : null
 }
 
 // do we have match detail or just the id from GET_ALL_MATCHES ?
 export function isMatchFetched(match: Match): boolean {
-  return match &&  match.data != undefined && match.data != null
+  return match && match.data != undefined && match.data != null
 }
 
 // do we have the match telemetry ?
 export function isMatchTelemetryFetched(match: Match): boolean {
   return match && match.data != undefined && match.telemetry != null && match.telemetry.length > 0
+}
+
+export function getEventsOfTypeAsHeatmapDatum(match: Match, eventType: TelemetryEventType): Array<HeatmapData> {
+  if (match && match.telemetry && match.telemetry.length > 0) {
+    const filtered = match.telemetry.filter(m => m._T === eventType)
+    switch (eventType) {
+      case TelemetryEventType.LogPlayerKill:
+        const ret =  filtered.map(m => Deserialize(m, LogPlayerKill).toHeatmapData())
+        console.log('returning ret', ret)
+        return ret
+      default:
+        return []
+    }
+  }
+  return []
 }
