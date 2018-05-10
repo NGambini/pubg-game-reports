@@ -1,7 +1,7 @@
 import { Deserialize } from 'cerialize'
 
 import Region from '../playerInfo/regions'
-import TelemetryEvent, { HeatmapData, LogPlayerKill } from './telemetry/telemetry.model'
+import TelemetryEvent, { HeatmapData, LogPlayerKill, LogPlayerPosition } from './telemetry/telemetry.model'
 import TelemetryEventType from './telemetry/telemetry.enum'
 
 export interface ParticipantStatistics {
@@ -109,9 +109,9 @@ export function getEventsOfTypeAsHeatmapDatum(match: Match, eventType: Telemetry
     const filtered = match.telemetry.filter(m => m._T === eventType)
     switch (eventType) {
       case TelemetryEventType.LogPlayerKill:
-        const ret =  filtered.map(m => Deserialize(m, LogPlayerKill).toHeatmapData())
-        console.log('returning ret', ret)
-        return ret
+        return filtered.map(m => Deserialize(m, LogPlayerKill).toHeatmapData())
+      case TelemetryEventType.LogPlayerPosition:
+        return filtered.map(m => Deserialize(m, LogPlayerPosition).toHeatmapData())
       default:
         return []
     }

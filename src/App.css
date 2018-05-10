@@ -30,8 +30,8 @@
 .map-erangel {
   background-image: url('./assets/maps/erangel.jpg');
   /* TODO dynamic */
-  width: 600px;
-  height: 600px;
+  width: 800px;
+  height: 800px;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;  

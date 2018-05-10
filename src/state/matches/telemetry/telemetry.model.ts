@@ -45,14 +45,31 @@ export class LogPlayerKill extends TelemetryEvent<TelemetryEventType.LogPlayerKi
     super()
   }
 
-  
+  public toHeatmapData(): HeatmapData {
+    // we only represent the victim position
+    return {
+      x: this.victim.location.x,
+      y: this.victim.location.y,
+      value: 1
+    }
+  }
+}
+
+export class LogPlayerPosition extends TelemetryEvent<TelemetryEventType.LogPlayerPosition> {
+  @autoserialize character: Character
+  @autoserialize elapsedTime: number
+  @autoserialize numAlivePlayers: number
+
+  constructor() {
+    super()
+  }
 
   public toHeatmapData(): HeatmapData {
     // we only represent the victim position
     return {
-      x: Math.floor(this.victim.location.x / 1000),
-      y: Math.floor(this.victim.location.y / 1000),
-      value: 5
+      x: Math.floor(this.character.location.x),
+      y: Math.floor(this.character.location.y),
+      value: 1
     }
   }
 }

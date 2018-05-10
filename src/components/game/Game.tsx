@@ -55,9 +55,8 @@ export class Game extends React.Component<Props, State> {
       {
         <button onClick={this.getMatchTelemetry} > get game telemetry</button>
       }
-      <Heatmap background="erangel" style={{'width': '600px', 'height': '600px'}}
-      data={{ 'data': getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerKill)}} />
-      {/* <Heatmap background="erangel" style={{'width': '600px', 'height': '600px'}} data={{ 'data': [{ x: 10, y: 15, value: 5}]}} /> */}
+      <Heatmap background="erangel" style={{'width': '800px', 'height': '800px'}}
+      data={{ 'max': 5, 'data': getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition)}} />
     </div>)
   }
 
