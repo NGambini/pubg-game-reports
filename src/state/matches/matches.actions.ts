@@ -71,10 +71,10 @@ export const getPlayerMatches: ActionCreator<ThunkAction<void, IStoreState, {}>>
         request: {
           method: 'GET',
           baseURL:'https://api.playbattlegrounds.com/',
-          url: `/shards/${shard}/players?filter[playerNames]=${playerName}`
-        } as AxiosRequestConfig
+          url: `/shards/${shard}/players?filter[playerNames]=${playerName}`,
+        }
       }
-    })
+    } as GetPlayerMatchesAction)
   }
 }
 
