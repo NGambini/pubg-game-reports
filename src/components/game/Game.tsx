@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { RouteComponentProps, withRouter } from 'react-router'
 
@@ -10,6 +9,9 @@ import IStoreState from '../../state/IStoreState'
 
 import Heatmap from './heatmap/Heatmap'
 import TelemetryEventType from '../../state/matches/telemetry/telemetry.enum';
+import { ThunkAction } from 'redux-thunk';
+import { ActionCreator } from 'redux';
+
 
 interface OwnProps {
 }
@@ -19,9 +21,9 @@ interface State {
 }
 
 interface DispatchToProps {
-  setCurrentMatch: (matchId: string) => void,
-  getMatchDetailed: (matchId: string) => void,
-  getMatchTelemetry: (match: Match) => void,
+  setCurrentMatch: (matchId: string) => MatchesActions.SetActiveMatchAction,
+  getMatchDetailed: ActionCreator<ThunkAction<void, IStoreState, {}>>,
+  getMatchTelemetry: ActionCreator<ThunkAction<void, IStoreState, {}>>
 }
 
 interface StateToProps {
@@ -70,21 +72,13 @@ const mapStateToProps = (state: IStoreState) => ({
   isLoading: true
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<IStoreState>) => ({
-  setCurrentMatch: (matchId: string) => {
-    dispatch(MatchesActions.setCurrentMatch(matchId))
-  },
-  getMatchDetailed: (matchId: string) => {
-    dispatch(MatchesActions.getMatchDetailed(matchId))
-  },
-  getMatchTelemetry: (match: Match) => {
-    dispatch(MatchesActions.getMatchTelemetry(match))
-  }
-})
+const mapDispatchToProps: DispatchToProps = {
+  setCurrentMatch: MatchesActions.setCurrentMatch,
+  getMatchDetailed: MatchesActions.getMatchDetailed,
+  getMatchTelemetry: MatchesActions.getMatchTelemetry,
+}
 
 export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
 )(Game) as any)
-
-
