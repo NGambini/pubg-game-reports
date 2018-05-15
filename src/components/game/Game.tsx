@@ -12,13 +12,9 @@ import TelemetryEventType from '../../state/matches/telemetry/telemetry.enum';
 import { ThunkAction } from 'redux-thunk';
 import { ActionCreator } from 'redux';
 
+interface OwnProps {}
 
-interface OwnProps {
-}
-
-interface State {
-
-}
+interface State {}
 
 interface DispatchToProps {
   setCurrentMatch: (matchId: string) => MatchesActions.SetActiveMatchAction,
@@ -29,6 +25,17 @@ interface DispatchToProps {
 interface StateToProps {
   displayedMatch: Match, // calling the key match would collide with the attr match from withRouter
   isLoading: boolean
+}
+
+const mapStateToProps = (state: IStoreState) => ({
+  displayedMatch: state.matches.matches[state.matches.current],
+  isLoading: true
+})
+
+const mapDispatchToProps: DispatchToProps = {
+  setCurrentMatch: MatchesActions.setCurrentMatch,
+  getMatchDetailed: MatchesActions.getMatchDetailed,
+  getMatchTelemetry: MatchesActions.getMatchTelemetry,
 }
 
 type Props = OwnProps & DispatchToProps & StateToProps & RouteComponentProps<{ gameId: string }>
@@ -65,17 +72,6 @@ export class Game extends React.Component<Props, State> {
   public componentWillUnmount() {
     this.props.setCurrentMatch(null)
   }
-}
-
-const mapStateToProps = (state: IStoreState) => ({
-  displayedMatch: state.matches.matches[state.matches.current],
-  isLoading: true
-})
-
-const mapDispatchToProps: DispatchToProps = {
-  setCurrentMatch: MatchesActions.setCurrentMatch,
-  getMatchDetailed: MatchesActions.getMatchDetailed,
-  getMatchTelemetry: MatchesActions.getMatchTelemetry,
 }
 
 export default withRouter(connect(
