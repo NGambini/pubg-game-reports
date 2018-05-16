@@ -20,7 +20,7 @@ export class Heatmap extends React.Component<Props, never> {
   private heatmapInstance: h337.Heatmap<"value", "x", "y">
 
   private setupHeatMap() {
-    const { style, data, config } = this.props;
+    const { style, config } = this.props
 
     const width = style.width.replace('px', '')
     const height = style.height.replace('px', '')
@@ -37,6 +37,17 @@ export class Heatmap extends React.Component<Props, never> {
     _cfg.container = _container
     this.heatmapInstance = h337.create(_cfg)
     this.setState({ cfg: _cfg })
+  }
+
+  componentDidMount() {
+    this.setupHeatMap()
+  }
+
+  componentDidUpdate() {
+    const { style, data } = this.props
+
+    const width = style.width.replace('px', '')
+    const height = style.height.replace('px', '')
 
     // now adapt data for the ratio
     const finalData = data 
@@ -47,10 +58,6 @@ export class Heatmap extends React.Component<Props, never> {
       value: d.value
     }))
     this.heatmapInstance.setData(finalData)
-  }
-
-  componentDidUpdate() {
-    this.setupHeatMap()
   }
 
   componentWillReceiveProps(nextProps: Props) {
