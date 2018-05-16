@@ -3,22 +3,23 @@ import * as h337 from 'heatmap.js'
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 
-import { Location } from 'state/matches/telemetry/telemetry.model'
+import { HeatmapData } from 'state/matches/telemetry/telemetry.model'
 
 type Props = {
   background: string,
   style: any,
-  config: any,
+  config?: any,
   data: {
-    data: Array<Location>,
+    data: Array<HeatmapData>,
     min: number,
     max: number
   }
 }
 
 export class Heatmap extends React.Component<Props, never> {
+  private heatmapInstance: h337.Heatmap<"value", "x", "y">
 
-  private setupHeatmap() {
+  private setupHeatMap() {
     const { style, data, config } = this.props;
 
     const width = style.width.replace('px', '')
@@ -48,10 +49,21 @@ export class Heatmap extends React.Component<Props, never> {
     this.heatmapInstance.setData(finalData)
   }
 
+  componentDidUpdate() {
+    this.setupHeatMap()
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    return nextProps != this.props
+  }
+
+  shouldComponentUpdate(nextProps: Props) {
+    return nextProps != this.props
+  }
 
   render() {
     return (
-      <div className={'map-' + this.props.background} ref="react-heatmap"></div>
+      <div className={'map-' + this.props.background}/>
     )
   }
 }
