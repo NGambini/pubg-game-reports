@@ -8,7 +8,7 @@ import * as MatchesActions from '../../state/matches/matches.actions'
 import IStoreState from '../../state/IStoreState'
 
 import Heatmap from './heatmap/Heatmap'
-import TelemetryEventType from '../../state/matches/telemetry/telemetry.enum';
+import TelemetryEventType from '../../state/matches/telemetry/events/telemetryEventType'
 import { ThunkAction } from 'redux-thunk';
 import { ActionCreator } from 'redux';
 

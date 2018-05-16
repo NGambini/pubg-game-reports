@@ -3,7 +3,7 @@ import * as h337 from 'heatmap.js'
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 
-import { HeatmapData } from 'state/matches/telemetry/telemetry.model'
+import { HeatmapData } from 'state/matches/telemetry/events'
 
 type Props = {
   background: string,

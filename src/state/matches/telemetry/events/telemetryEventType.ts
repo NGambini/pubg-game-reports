@@ -2,7 +2,7 @@
 // pc telemetry will have keys starting with a lowercase character,
 // while xbox telemetry will have the same keys but starting with an uppercase character.
 
-enum TelemetryEventType {
+export enum TelemetryEventType {
   LogPlayerLogin = 'LogPlayerLogin',
   LogPlayerCreate = 'LogPlayerCreate',
   LogPlayerPosition = 'LogPlayerPosition',

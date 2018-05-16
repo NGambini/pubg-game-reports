@@ -1,8 +1,7 @@
 import { Deserialize } from 'cerialize'
 
 import Region from '../playerInfo/regions'
-import TelemetryEvent, { HeatmapData, LogPlayerKill, LogPlayerPosition } from './telemetry/telemetry.model'
-import TelemetryEventType from './telemetry/telemetry.enum'
+import { TelemetryEventType, TelemetryEvent, HeatmapData, LogPlayerKill, LogPlayerPosition } from './telemetry/events'
 
 export interface ParticipantStatistics {
   DBNOs: number,
