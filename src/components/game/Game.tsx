@@ -1,16 +1,16 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { ThunkAction } from 'redux-thunk'
+import { ActionCreator } from 'redux'
 import { RouteComponentProps, withRouter } from 'react-router'
 
-import Match, { getEventsOfTypeAsHeatmapDatum } from '../../state/matches/match.model'
-import * as MatchesActions from '../../state/matches/matches.actions'
-
-import IStoreState from '../../state/IStoreState'
+import IStoreState from 'state/IStoreState'
+import Match from 'state/matches/match.model'
+import { TelemetryEventType } from 'state/matches/telemetry/events'
+import { getEventsOfTypeAsHeatmapDatum, getPlanePath } from 'state/matches/match.selectors'
+import * as MatchesActions from 'state/matches/matches.actions'
 
 import Heatmap from './heatmap/Heatmap'
-import TelemetryEventType from '../../state/matches/telemetry/events/telemetryEventType'
-import { ThunkAction } from 'redux-thunk';
-import { ActionCreator } from 'redux';
 
 interface OwnProps {}
 
@@ -62,8 +62,9 @@ export class Game extends React.Component<Props, State> {
       game detail view
       <br />
       {
-        <button onClick={this.getMatchTelemetry} > get game telemetry</button>
+        <button onClick={this.getMatchTelemetry}>get game telemetry</button>
       }
+      <div>plane path : { JSON.stringify(getPlanePath(this.props.displayedMatch)) }</div>
       <Heatmap background="erangel" style={{'width': '800px', 'height': '800px'}}
       data={{ min: 0, max: 5, data: getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition)}} />
     </div>)

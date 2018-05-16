@@ -2,9 +2,9 @@ import { Dispatch } from 'redux';
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ThunkAction } from 'redux-thunk'
 
-import Match, { getTelemetryUrl } from './match.model'
+import Match from './match.model'
+import { getTelemetryUrl } from 'state/matches/match.selectors'
 
-// import Region from '../playerInfo/regions'
 import IStoreState from '../IStoreState'
 import { ActionCreator } from 'redux'
 
