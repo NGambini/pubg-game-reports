@@ -1,7 +1,12 @@
-import { Deserialize } from 'cerialize'
-
 import Region from '../playerInfo/regions'
-import { TelemetryEventType, TelemetryEvent, HeatmapData, LogPlayerKill, LogPlayerPosition } from './telemetry/events'
+import { 
+  TelemetryEventType,
+  TelemetryEvent,
+  HeatmapData,
+  LogPlayerKill,
+  LogPlayerPosition,
+  HeatmapTranslator
+} from './telemetry/events'
 
 export interface ParticipantStatistics {
   DBNOs: number,
@@ -86,10 +91,8 @@ export default interface Match {
 }
 
 //TODO move into selectors file
-
 export function getTelemetryUrl(match: Match): string {
   const telemetryId = match && match.data.relationships.assets.data && match.data.relationships.assets.data[0].id
-
   return telemetryId ? (match.included.find(i => i.id === telemetryId).attributes as TelemetryAttributes).URL : null
 }
 
@@ -103,14 +106,21 @@ export function isMatchTelemetryFetched(match: Match): boolean {
   return match && match.data != undefined && match.telemetry != null && match.telemetry.length > 0
 }
 
+export function getEventsOfType(match: Match, eventType: TelemetryEventType): Array<TelemetryEvent<TelemetryEventType>> {
+  if (match && match.telemetry && match.telemetry.length > 0) {
+    return match.telemetry.filter(m => m._T === eventType)
+  }
+  return []
+}
+
 export function getEventsOfTypeAsHeatmapDatum(match: Match, eventType: TelemetryEventType): Array<HeatmapData> {
   if (match && match.telemetry && match.telemetry.length > 0) {
     const filtered = match.telemetry.filter(m => m._T === eventType)
     switch (eventType) {
       case TelemetryEventType.LogPlayerKill:
-        return filtered.map(m => Deserialize(m, LogPlayerKill).toHeatmapData())
+        return filtered.map(m => HeatmapTranslator.fromLogPlayerKill(m as LogPlayerKill))
       case TelemetryEventType.LogPlayerPosition:
-        return filtered.map(m => Deserialize(m, LogPlayerPosition).toHeatmapData())
+        return filtered.map(m => HeatmapTranslator.fromLogPlayerPosition(m as LogPlayerPosition))
       default:
         return []
     }
