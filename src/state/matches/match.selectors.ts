@@ -5,9 +5,12 @@ import {
   TelemetryEvent,
   LogPlayerKill,
   HeatmapData,
-  HeatmapTranslator
+  HeatmapTranslator,
+  LogGameStatePeriodic
 } from 'state/matches/telemetry/events'
-import { PlanePath } from 'state/matches/telemetry/computedObjects'
+import { PlanePath, Circle } from 'state/matches/telemetry/computedObjects'
+import telemetryEventType from 'state/matches/telemetry/events/telemetryEventType'
+import { Location } from 'state/matches/telemetry/objects'
 
 //TODO move into selectors file
 export function getTelemetryUrl(match: Match): string {
@@ -38,18 +41,47 @@ export function getPlanePath(match: Match): PlanePath {
     return null
   }
   const planeZ = Math.max.apply(Math, posEvents.map(e => Math.round(e.character.location.z)))
-  const locationsInPlane = posEvents.filter(e => e.character.location.z === planeZ).map(e => e.character.location)
-  
+  const locationsInPlane = posEvents.filter(e => Math.round(e.character.location.z) === planeZ).map(e => e.character.location)
+
   const x0 = locationsInPlane[0].x,
-  y0 = locationsInPlane[0].y,
-  x1 = locationsInPlane[locationsInPlane.length - 1].x,
-  y1 = locationsInPlane[locationsInPlane.length - 1].y
+    y0 = locationsInPlane[0].y,
+    x1 = locationsInPlane[locationsInPlane.length - 1].x,
+    y1 = locationsInPlane[locationsInPlane.length - 1].y
 
   const angle = Math.atan2(y1 - y0, x1 - x0)
   console.log('Math.round(x0 / 800)', Math.round(x0 / 800))
   console.log('Math.round(y0 / 800)', Math.round(y0 / 800))
   console.log('angle', angle)
   return null
+}
+
+export function getSafeZones(match: Match): Array<Circle> {
+  type WeightedCircle = Circle & { weight: number }
+  const gStateEvents = getEventsOfType(match, telemetryEventType.LogGameStatePeriodic) as Array<LogGameStatePeriodic>
+  if (gStateEvents.length === 0) { return null }
+  const coordsDict: { [id: number]: WeightedCircle } = {}
+
+  gStateEvents.map((e: LogGameStatePeriodic) => ({
+    radius: e.gameState.safetyZoneRadius,
+    location: {
+      x: Math.round(e.gameState.safetyZonePosition.x),
+      y: Math.round(e.gameState.safetyZonePosition.y),
+      z: Math.round(e.gameState.safetyZonePosition.z)
+    } as Location
+  } as Circle)).forEach((c: Circle) => { // weight circles by occurences
+    if (coordsDict[c.location.x]) {
+      coordsDict[c.location.x].radius++
+    } else {
+      coordsDict[c.location.x] = {
+        weight: 1,
+        location: c.location,
+        radius: c.radius
+      }
+    }
+  })
+  return Object.keys(coordsDict)
+    .map((key: string) => coordsDict[key])
+    .filter((c: WeightedCircle) => c.weight > 4)
 }
 
 export function getEventsOfTypeAsHeatmapDatum(match: Match, eventType: TelemetryEventType): Array<HeatmapData> {
