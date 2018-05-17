@@ -12,12 +12,13 @@ import * as MatchesActions from 'state/matches/matches.actions'
 
 import Heatmap from './heatmap/Heatmap'
 
-interface OwnProps {}
+interface OwnProps { }
 
-interface State {}
+interface State { }
 
 interface DispatchToProps {
   setCurrentMatch: (matchId: string) => MatchesActions.SetActiveMatchAction,
+  calcSafeZones: (matchId?: string) => MatchesActions.CalcSafeZonesAction,
   getMatchDetailed: ActionCreator<ThunkAction<void, IStoreState, {}>>,
   getMatchTelemetry: ActionCreator<ThunkAction<void, IStoreState, {}>>
 }
@@ -34,6 +35,7 @@ const mapStateToProps = (state: IStoreState) => ({
 
 const mapDispatchToProps: DispatchToProps = {
   setCurrentMatch: MatchesActions.setCurrentMatch,
+  calcSafeZones: MatchesActions.calcSafeZones,
   getMatchDetailed: MatchesActions.getMatchDetailed,
   getMatchTelemetry: MatchesActions.getMatchTelemetry,
 }
@@ -45,6 +47,7 @@ export class Game extends React.Component<Props, State> {
     super(props, state)
 
     this.getMatchTelemetry = this.getMatchTelemetry.bind(this)
+    this.calcSafeZones = this.calcSafeZones.bind(this)
   }
 
   public componentDidMount() {
@@ -57,17 +60,22 @@ export class Game extends React.Component<Props, State> {
     this.props.getMatchTelemetry(this.props.displayedMatch)
   }
 
+  public calcSafeZones() {
+    this.props.calcSafeZones(this.props.match.params.gameId)
+  }
+
   public render() {
     return (<div>
       game detail view
       <br />
-      {
-        <button onClick={this.getMatchTelemetry}>get game telemetry</button>
-      }
-      <div>plane path : { JSON.stringify(getPlanePath(this.props.displayedMatch)) }</div>
-      <div>circle coordinates : { JSON.stringify(getSafeZones(this.props.displayedMatch)) }</div>
-      <Heatmap background="erangel" style={{'width': '800px', 'height': '800px'}}
-      data={{ min: 0, max: 5, data: getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition)}} />
+
+      <button onClick={this.getMatchTelemetry}>get game telemetry</button>
+      <button onClick={this.calcSafeZones}>calc safe zone</button>
+
+      <div>plane path : {JSON.stringify(getPlanePath(this.props.displayedMatch))}</div>
+      <div>circle coordinates : {JSON.stringify(getSafeZones(this.props.displayedMatch))}</div>
+      <Heatmap background="erangel" style={{ 'width': '800px', 'height': '800px' }}
+        data={{ min: 0, max: 5, data: getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition) }} />
     </div>)
   }
 

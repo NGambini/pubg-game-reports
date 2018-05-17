@@ -15,7 +15,15 @@ export enum MatchesActionKeys {
   GET_MATCH_DETAILED_SUCCESS = 'GET_MATCH_DETAILED_SUCCESS',
   GET_MATCH_TELEMETRY = 'GET_MATCH_TELEMETRY',
   GET_MATCH_TELEMETRY_SUCCESS = 'GET_MATCH_TELEMETRY_SUCCESS',
-  SET_CURRENT_MATCH = 'SET_CURRENT_MATCH'
+  SET_CURRENT_MATCH = 'SET_CURRENT_MATCH',
+  CALC_SAFE_ZONES = 'CALC_SAFE_ZONES'
+}
+
+export interface CalcSafeZonesAction {
+  readonly type: MatchesActionKeys.CALC_SAFE_ZONES,
+  readonly payload: {
+    matchId?: string // none passed will calc current
+  }
 }
 
 export interface GetPlayerMatchesAction {
@@ -70,7 +78,7 @@ export const getPlayerMatches: ActionCreator<ThunkAction<void, IStoreState, {}>>
       payload: {
         request: {
           method: 'GET',
-          baseURL:'https://api.playbattlegrounds.com/',
+          baseURL: 'https://api.playbattlegrounds.com/',
           url: `/shards/${shard}/players?filter[playerNames]=${playerName}`,
         }
       }
@@ -107,11 +115,20 @@ export const getMatchTelemetry: ActionCreator<ThunkAction<void, IStoreState, {}>
           method: 'GET',
           url: telemetryUrl,
           params: {
-            matchId: match.id 
+            matchId: match.id
           }
         } as AxiosRequestConfig
       }
     })
+  }
+}
+
+export function calcSafeZones(matchId: string = null): CalcSafeZonesAction {
+  return {
+    type: MatchesActionKeys.CALC_SAFE_ZONES,
+    payload: {
+      matchId: matchId
+    }
   }
 }
 
@@ -125,11 +142,12 @@ export function setCurrentMatch(matchId: string): SetActiveMatchAction {
 }
 
 type MatchesActions = GetPlayerMatchesAction |
-                      GetPlayerMatchesSuccessAction |
-                      GetMatchDetailedAction |
-                      GetMatchDetailedSuccessAction | 
-                      SetActiveMatchAction |
-                      GetMatchTelemetryAction |
-                      GetMatchTelemetrySuccessAction
+  GetPlayerMatchesSuccessAction |
+  GetMatchDetailedAction |
+  GetMatchDetailedSuccessAction |
+  SetActiveMatchAction |
+  GetMatchTelemetryAction |
+  GetMatchTelemetrySuccessAction |
+  CalcSafeZonesAction
 
 export default MatchesActions

@@ -1,5 +1,6 @@
 import Region from '../playerInfo/regions'
 import { TelemetryEventType, TelemetryEvent } from './telemetry/events'
+import { Circle, PlanePath } from 'state/matches/telemetry/computedObjects'
 
 export interface ParticipantStatistics {
   DBNOs: number,
@@ -80,5 +81,10 @@ export default interface Match {
     } // will be used for understanding relations between players (teams)
   }
   included: Array<MatchIncluded>, //all rosters and players without nesting
-  telemetry: Array<TelemetryEvent<TelemetryEventType>> // all game events
+  telemetry: Array<TelemetryEvent<TelemetryEventType>>, // all game events
+  computed: {
+    safeZones: Array<Circle>,
+    redZones: Array<Circle>,
+    planePath: PlanePath
+  }
 }

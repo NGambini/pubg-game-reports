@@ -3,6 +3,7 @@ import update from 'immutability-helper'
 import MatchesActions, { MatchesActionKeys } from './matches.actions'
 import MatchesState, { initialState } from './matches.state'
 import Match from './match.model'
+import { getSafeZones } from './match.selectors'
 
 // we need to ensure the match id can be accessed through instance.id (instead of instance.data.id)
 // so our code works either after GET_ALL_MATCHES OR GET_DETAILED_MATCH
@@ -14,6 +15,7 @@ function matchFromObject(data: object): Match {
 }
 
 export default function matchesReducer(state: MatchesState = initialState, action: MatchesActions): MatchesState {
+  console.log("action: ", action)
   switch (action.type) {
     case MatchesActionKeys.GET_PLAYER_MATCHES:
       return { ...state, isLoading: true }
@@ -38,7 +40,18 @@ export default function matchesReducer(state: MatchesState = initialState, actio
       return update(state, {
         matches: {
           [action.payload.config.params['matchId']]: {
-            telemetry: { $set: action.payload.data }
+            telemetry: { $set: action.payload.data },
+            computed: { $set: {}} // why do we need this ? see https://github.com/kolodny/immutability-helper/issues/16
+          }
+        }
+      })
+    case MatchesActionKeys.CALC_SAFE_ZONES:
+      return update(state, {
+        matches: {
+          [action.payload.matchId]: {
+            computed: {
+              safeZones: { $set: getSafeZones(state.matches[action.payload.matchId]) }
+            }
           }
         }
       })
