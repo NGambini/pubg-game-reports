@@ -69,8 +69,8 @@ export function getSafeZones(match: Match): Array<Circle> {
       z: Math.round(e.gameState.safetyZonePosition.z)
     } as Location
   } as Circle)).forEach((c: Circle) => { // weight circles by occurences
-    if (coordsDict[c.location.x]) {
-      coordsDict[c.location.x].radius++
+    if (coordsDict[c.location.x] != undefined) {
+      coordsDict[c.location.x].weight++
     } else {
       coordsDict[c.location.x] = {
         weight: 1,

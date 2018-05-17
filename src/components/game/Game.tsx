@@ -7,7 +7,7 @@ import { RouteComponentProps, withRouter } from 'react-router'
 import IStoreState from 'state/IStoreState'
 import Match from 'state/matches/match.model'
 import { TelemetryEventType } from 'state/matches/telemetry/events'
-import { getEventsOfTypeAsHeatmapDatum, getPlanePath } from 'state/matches/match.selectors'
+import { getEventsOfTypeAsHeatmapDatum, getPlanePath, getSafeZones } from 'state/matches/match.selectors'
 import * as MatchesActions from 'state/matches/matches.actions'
 
 import Heatmap from './heatmap/Heatmap'
@@ -65,6 +65,7 @@ export class Game extends React.Component<Props, State> {
         <button onClick={this.getMatchTelemetry}>get game telemetry</button>
       }
       <div>plane path : { JSON.stringify(getPlanePath(this.props.displayedMatch)) }</div>
+      <div>circle coordinates : { JSON.stringify(getSafeZones(this.props.displayedMatch)) }</div>
       <Heatmap background="erangel" style={{'width': '800px', 'height': '800px'}}
       data={{ min: 0, max: 5, data: getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition)}} />
     </div>)
