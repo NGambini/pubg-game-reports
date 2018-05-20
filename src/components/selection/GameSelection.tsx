@@ -119,7 +119,7 @@ export class GameSelectionInternal extends React.Component<Props & StateToProps,
             </RegionSelect>
           </Label>
           <Button rightIcon='tick' type='submit' text='Submit' />
-          <GameTable />
+          <GameTable matchesArray={this.props.matches}/>
         </form>
       </div>
     )
