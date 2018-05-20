@@ -40,10 +40,11 @@ export class Heatmap extends React.Component<Props, never> {
   }
 
   componentDidMount() {
-    this.setupHeatMap()
+        this.setupHeatMap()
   }
 
   componentDidUpdate() {
+
     const { style, data } = this.props
 
     const width = style.width.replace('px', '')
@@ -58,15 +59,16 @@ export class Heatmap extends React.Component<Props, never> {
       value: d.value
     }))
     this.heatmapInstance.setData(finalData)
+    this.heatmapInstance.repaint()
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    return nextProps != this.props
-  }
+  // componentWillReceiveProps(nextProps: Props) {
+  //   return nextProps != this.props
+  // }
 
-  shouldComponentUpdate(nextProps: Props) {
-    return nextProps != this.props
-  }
+  // shouldComponentUpdate(nextProps: Props) {
+  //   return nextProps != this.props
+  // }
 
   render() {
     return (

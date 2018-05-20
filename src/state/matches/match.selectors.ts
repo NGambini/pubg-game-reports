@@ -1,3 +1,5 @@
+import * as moment from 'moment'
+
 import Match, { TelemetryAttributes } from 'state/matches/match.model'
 import {
   TelemetryEventType,
@@ -84,9 +86,16 @@ export function getSafeZones(match: Match): Array<Circle> {
     .filter((c: WeightedCircle) => c.weight > 4)
 }
 
-export function getEventsOfTypeAsHeatmapDatum(match: Match, eventType: TelemetryEventType): Array<HeatmapData> {
+export function getEventsOfTypeAsHeatmapDatum(match: Match, eventType: TelemetryEventType, maxTick: number = null): Array<HeatmapData> {
   if (match && match.telemetry && match.telemetry.length > 0) {
-    const filtered = match.telemetry.filter(m => m._T === eventType)
+    let filtered = match.telemetry.filter(m => m._T === eventType)
+    if (maxTick && match.data) {
+      const gameDate = moment(match.data.attributes.createdAt)
+
+      filtered = filtered.filter((e: TelemetryEvent<TelemetryEventType>) => {
+        return moment(gameDate).add(maxTick, 'seconds').isBefore(e._D)
+      })
+    }
     switch (eventType) {
       case TelemetryEventType.LogPlayerKill:
         return filtered.map(m => HeatmapTranslator.fromLogPlayerKill(m as LogPlayerKill))

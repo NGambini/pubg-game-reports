@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { ThunkAction } from 'redux-thunk'
 import { ActionCreator } from 'redux'
 import { RouteComponentProps, withRouter } from 'react-router'
+import * as moment from 'moment'
 
 import IStoreState from 'state/IStoreState'
 import Match from 'state/matches/match.model'
@@ -12,9 +13,15 @@ import * as MatchesActions from 'state/matches/matches.actions'
 
 import Heatmap from './heatmap/Heatmap'
 
+import { Slider } from "@blueprintjs/core"
+
 interface OwnProps { }
 
-interface State { }
+const initialState = {
+  sliderValue: 0
+}
+
+type State = typeof initialState
 
 interface DispatchToProps {
   setCurrentMatch: (matchId: string) => MatchesActions.SetActiveMatchAction,
@@ -43,6 +50,8 @@ const mapDispatchToProps: DispatchToProps = {
 type Props = OwnProps & DispatchToProps & StateToProps & RouteComponentProps<{ gameId: string }>
 
 export class Game extends React.Component<Props, State> {
+  readonly state: State = initialState
+
   constructor(props: Props, state: State) {
     super(props, state)
 
@@ -75,7 +84,17 @@ export class Game extends React.Component<Props, State> {
       <div>plane path : {JSON.stringify(getPlanePath(this.props.displayedMatch))}</div>
       <div>circle coordinates : {JSON.stringify(getSafeZones(this.props.displayedMatch))}</div>
       <Heatmap background="erangel" style={{ 'width': '800px', 'height': '800px' }}
-        data={{ min: 0, max: 5, data: getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition) }} />
+        data={{ min: 0, max: 5, data: getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition, this.state.sliderValue) }} />
+        {this.props.displayedMatch && this.props.displayedMatch.data && <Slider
+            min={0}
+            max={this.props.displayedMatch.data.attributes.duration}
+            stepSize={15}
+            labelStepSize={60}
+            onChange={(value: number) => this.setState({ sliderValue: value })}
+            labelRenderer={(value: number) => moment().startOf('day').seconds(value).format('mm:ss') }
+            value={this.state.sliderValue}
+        />}
+
     </div>)
   }
 
