@@ -8,6 +8,9 @@ import store from './state/store'
 
 import './App.css'
 
+import { Intent, Spinner } from "@blueprintjs/core"
+
+
 import logo from './logo.svg'
 
 class App extends React.Component {
@@ -18,6 +21,7 @@ class App extends React.Component {
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
             <h1 className="App-title">Welcome to React</h1>
+            <Spinner intent={Intent.PRIMARY} />
           </header>
           <Router>
             <div>
