@@ -43,27 +43,23 @@ const initialState = {
   regionId: Region.pc_eu
 }
 
-type Props = {
-  setPlayerInfo: (token: string, playerName: string, regionId: Region) => void,
-  getMatchDetailed: (gameId: string) => void
-}
 type State = Readonly<typeof initialState>
 
-export class GameSelectionInternal extends React.Component<Props & StateToProps, State> {
+export class GameSelectionInternal extends React.Component<DispatchToProps & StateToProps, State> {
   readonly state: State = initialState
 
-  constructor(props: Props & StateToProps, state: State) {
+  constructor(props: DispatchToProps & StateToProps, state: State) {
     super(props, state)
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.changePlayerName = this.changePlayerName.bind(this)
     this.changeToken = this.changeToken.bind(this)
-    this.getMatchDetailed = this.getMatchDetailed.bind(this)
+    this.getMatchesDetailed = this.getMatchesDetailed.bind(this)
   }
 
 
-  public getMatchDetailed(gameId: string) {
-    this.props.getMatchDetailed(gameId)
+  public getMatchesDetailed() {
+    this.props.getMatchesDetailed()
   }
 
   public handleSubmit = (e: React.FormEvent<any>) => {
@@ -119,8 +115,9 @@ export class GameSelectionInternal extends React.Component<Props & StateToProps,
             </RegionSelect>
           </Label>
           <Button rightIcon='tick' type='submit' text='Submit' />
-          <GameTable matchesArray={this.props.matches}/>
         </form>
+        <Button rightIcon='tick' type='button' text='get match detailed' onClick={this.getMatchesDetailed}/>
+        <GameTable matchesArray={this.props.matches}/>
       </div>
     )
   }
@@ -133,7 +130,7 @@ interface StateToProps {
 
 interface DispatchToProps {
   setPlayerInfo: (token: string, playerName: string, regionId: Region) => void,
-  getMatchDetailed: (gameId: string) => void
+  getMatchesDetailed: () => void
 }
 
 const mapStateToProps = (state: IStoreState) => ({
@@ -146,8 +143,8 @@ const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): DispatchToProps =>
     dispatch(PlayerInfoActions.setPlayerInfo(token, playerName, regionId))
     dispatch(MatchesActions.getPlayerMatches())
   },
-  getMatchDetailed: (gameId: string) => {
-    dispatch(MatchesActions.getMatchDetailed(gameId))
+  getMatchesDetailed: () => {
+    dispatch(MatchesActions.getPlayerMatchesDetailed())
   }
 })
 

@@ -1,7 +1,9 @@
 import * as React from 'react'
+import * as moment from 'moment'
 
 import { Table, Column, Cell } from '@blueprintjs/table'
-import Match from 'state/matches/match.model';
+import Match from 'state/matches/match.model'
+import { gameMapFromString } from 'state/enums/gameMaps'
 
 type TableProps = {
   matchesArray: Array<Match>
@@ -25,7 +27,7 @@ export default class GameTable extends React.Component<TableProps> {
     const match = this.props.matchesArray[rowIndex]
 
     return <Cell loading={match.data === undefined}>
-      {match.id}
+      {match.data ? moment(match.data.attributes.createdAt).format('MMMM Do YYYY, h:mm a') : null}
     </Cell>
   }
 
@@ -33,7 +35,7 @@ export default class GameTable extends React.Component<TableProps> {
     const match = this.props.matchesArray[rowIndex]
 
     return <Cell loading={match.data === undefined}>
-      {match.data ? match.data.attributes.mapName : null}
+      {match.data ? gameMapFromString(match.data.attributes.mapName) : null}
     </Cell>
   }
 
@@ -41,7 +43,7 @@ export default class GameTable extends React.Component<TableProps> {
     const match = this.props.matchesArray[rowIndex]
 
     return <Cell loading={match.data === undefined}>
-      {match.data ? match.data.attributes.duration : null}
+      {match.data ? moment().startOf('day').seconds(match.data.attributes.duration).format('mm:ss') : null}
     </Cell>
   }
 

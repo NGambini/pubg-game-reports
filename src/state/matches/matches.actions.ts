@@ -20,6 +20,10 @@ export enum MatchesActionKeys {
   CALC_SAFE_ZONES = 'CALC_SAFE_ZONES'
 }
 
+export interface GetPlayerMatchesDetailedAction {
+  readonly type: MatchesActionKeys.GET_PLAYER_MATCHES_DETAILED,
+}
+
 export interface CalcSafeZonesAction {
   readonly type: MatchesActionKeys.CALC_SAFE_ZONES,
   readonly payload: {
@@ -124,6 +128,26 @@ export const getMatchTelemetry: ActionCreator<ThunkAction<void, IStoreState, {}>
   }
 }
 
+export const getPlayerMatchesDetailed: ActionCreator<ThunkAction<void, IStoreState, {}>> = () => {
+  return (dispatch: Dispatch<IStoreState>, getState: () => IStoreState, extraArg: {}) => {
+    const shard = getState().playerInfo.regionId
+    const gameIds = Object.keys(getState().matches.matches).map((k) => getState().matches.matches[k].id)
+
+    for (let i = 0; i < gameIds.length; i++) {
+      dispatch({
+        type: MatchesActionKeys.GET_MATCH_DETAILED,
+        payload: {
+          request: {
+            method: 'GET',
+            baseURL: 'https://api.playbattlegrounds.com/',
+            url: `/shards/${shard}/matches/${gameIds[i]}`
+          } as AxiosRequestConfig
+        }
+      })
+    }
+  }
+}
+
 export function calcSafeZones(matchId: string = null): CalcSafeZonesAction {
   return {
     type: MatchesActionKeys.CALC_SAFE_ZONES,
@@ -149,6 +173,7 @@ type MatchesActions = GetPlayerMatchesAction |
   SetActiveMatchAction |
   GetMatchTelemetryAction |
   GetMatchTelemetrySuccessAction |
-  CalcSafeZonesAction
+  CalcSafeZonesAction |
+  GetPlayerMatchesDetailedAction
 
 export default MatchesActions
