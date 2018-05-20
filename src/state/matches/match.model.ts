@@ -78,7 +78,7 @@ export default interface Match {
       assets: {
         data: Array<{ type: 'asset', id: string }>
       }
-    } // will be used for understanding relations between players (teams)
+    }
   }
   included: Array<MatchIncluded>, //all rosters and players without nesting
   telemetry: Array<TelemetryEvent<TelemetryEventType>>, // all game events
