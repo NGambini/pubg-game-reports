@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
 import Header from 'components/layout/header/Header'
 import Footer from 'components/layout/footer/Footer'
 
-import GameSelection from './GameSelection'
+import GameSelection from './components/selection/GameSelection'
 import Game from './components/game/Game'
 import store from './state/store'
 
@@ -15,14 +15,18 @@ class App extends React.Component {
   public render() {
     return (
       <Provider store={store}>
-        <div className="App">
+        <div className='App pt-app pt-dark'>
           <Header />
           <Router>
-            <div>
-              <Route path="/choose-game" component={GameSelection} />
-              <Route path="/game/:gameId" component={Game} />
-              <Link to="/choose-game">choose game</Link>
-            </div>
+            <main>
+              <br/>
+              <br/>
+              <br/>
+              <br/>
+              <br/>
+              <Route path='/choose-game' component={GameSelection} />
+              <Route path='/game/:gameId' component={Game} />
+            </main>
           </Router>
           <Footer />
         </div>

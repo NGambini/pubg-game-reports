@@ -2,20 +2,45 @@ import * as React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 
-import Region from './state/playerInfo/regions'
-import Match from './state/matches/match.model'
-import * as PlayerInfoActions from './state/playerInfo/playerinfo.actions'
-import * as MatchesActions from './state/matches/matches.actions'
+import Region, { AllRegions } from 'state/playerInfo/regions'
+import Match from 'state/matches/match.model'
+import * as PlayerInfoActions from 'state/playerInfo/playerinfo.actions'
+import * as MatchesActions from 'state/matches/matches.actions'
 
-import IStoreState from './state/IStoreState'
+import IStoreState from 'state/IStoreState'
 // import store from './state/store'
 
-import GameEntry from './components/selection/GameEntry'
+import GameTable from './GameTable'
+
+import { Select, ItemRenderer, ItemPredicate } from '@blueprintjs/select'
+import { MenuItem, Button, Label } from '@blueprintjs/core'
+
+
+const RegionSelect = Select.ofType<Region>()
+
+const renderRegion: ItemRenderer<Region> = (item, { handleClick, modifiers }) => {
+  if (!modifiers.matchesPredicate) {
+    return null;
+  }
+  return (
+    <MenuItem
+      active={false}
+      key={item}
+      label={item}
+      onClick={handleClick}
+      text={item}
+    />
+  )
+}
+
+const filterRegion: ItemPredicate<Region> = (query, region) => {
+  return region.indexOf(query.toLowerCase()) >= 0;
+}
 
 const initialState = {
   authToken: '',
   playerName: '',
-  regionId: Region["pc-eu"]
+  regionId: Region.pc_eu
 }
 
 type Props = {
@@ -36,6 +61,7 @@ export class GameSelectionInternal extends React.Component<Props & StateToProps,
     this.getMatchDetailed = this.getMatchDetailed.bind(this)
   }
 
+
   public getMatchDetailed(gameId: string) {
     this.props.getMatchDetailed(gameId)
   }
@@ -45,9 +71,9 @@ export class GameSelectionInternal extends React.Component<Props & StateToProps,
     this.props.setPlayerInfo(this.state.authToken, this.state.playerName, this.state.regionId)
   }
 
-  public changeRegion = (e: React.FormEvent<any>) => {
+  public changeRegion = (e: Region) => {
     this.setState({
-      regionId: e.currentTarget.value
+      regionId: e
     })
   }
 
@@ -75,21 +101,25 @@ export class GameSelectionInternal extends React.Component<Props & StateToProps,
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <label>
-            Token:
-            <input type="text" value={this.state.authToken} onChange={this.changeToken} />
-          </label>
-          <label>
-            Player name:
-            <input type="text" value={this.state.playerName} onChange={this.changePlayerName} />
-          </label>
-          <select onChange={this.changeRegion} value={this.state.regionId}>
-            {regionShards}
-          </select>
-          <input type="submit" value="Submit" />
-          <br/>
-          <br/>
-          { this.props.matches.map(m => <GameEntry key={m.id} gameId={m.id}/>) }
+          {/* <Label text='Token'>
+            <input className='pt-input' type='text' value={this.state.authToken} onChange={this.changeToken} />
+          </Label> */}
+          <Label text='Player Name: '>
+            <input className='pt-input' type='text' placeholder='elitekiller1337' value={this.state.playerName} onChange={this.changePlayerName} />
+          </Label>
+          <Label text='Server: '>
+            <RegionSelect
+              items={AllRegions}
+              itemPredicate={filterRegion}
+              itemRenderer={renderRegion}
+              onItemSelect={this.changeRegion}
+              noResults={<MenuItem disabled={true} text='No results.' />}
+            >
+              <Button rightIcon='caret-down' text={this.state.regionId} disabled={false} />
+            </RegionSelect>
+          </Label>
+          <Button rightIcon='tick' type='submit' text='Submit' />
+          <GameTable />
         </form>
       </div>
     )
