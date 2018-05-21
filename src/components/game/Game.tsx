@@ -13,12 +13,14 @@ import * as MatchesActions from 'state/matches/matches.actions'
 
 import Heatmap from './heatmap/Heatmap'
 
-import { Slider } from "@blueprintjs/core"
+import { Slider, ButtonGroup, Button } from "@blueprintjs/core"
 
 interface OwnProps { }
 
 const initialState = {
-  sliderValue: 0
+  elapsed: 0,
+  startTime: Date.now(),
+  isPlaying: false
 }
 
 type State = typeof initialState
@@ -57,6 +59,11 @@ export class Game extends React.Component<Props, State> {
 
     this.getMatchTelemetry = this.getMatchTelemetry.bind(this)
     this.calcSafeZones = this.calcSafeZones.bind(this)
+    this.handleTick = this.handleTick.bind(this)
+    this.stop = this.stop.bind(this)
+    this.playPause = this.playPause.bind(this)
+
+    setInterval(this.handleTick, 1000)
   }
 
   public componentDidMount() {
@@ -73,6 +80,27 @@ export class Game extends React.Component<Props, State> {
     this.props.calcSafeZones(this.props.match.params.gameId)
   }
 
+  public playPause() {
+    this.setState({
+      isPlaying: !this.state.isPlaying,
+      startTime: !this.state.isPlaying ? Date.now(): null
+    })
+  }
+
+  private handleTick() {
+    if (this.state.isPlaying) {
+      this.setState({
+        elapsed: Date.now() - this.state.startTime
+      })
+    }
+  }
+
+  public stop()  {
+    this.setState({
+      isPlaying: false
+    })
+  }
+
   public render() {
     return (<div>
       game detail view
@@ -84,16 +112,22 @@ export class Game extends React.Component<Props, State> {
       {/* <div>plane path : {JSON.stringify(getPlanePath(this.props.displayedMatch))}</div> */}
       <div>circle coordinates : {JSON.stringify(getSafeZones(this.props.displayedMatch))}</div>
       <Heatmap background="erangel" style={{ 'width': '800px', 'height': '800px' }}
-        data={{ min: 0, max: 5, data: getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition, this.state.sliderValue) }} />
-        {this.props.displayedMatch && this.props.displayedMatch.data && <Slider
-            min={0}
-            max={this.props.displayedMatch.data.attributes.duration}
-            stepSize={15}
-            labelStepSize={60}
-            onChange={(value: number) => this.setState({ sliderValue: value })}
-            labelRenderer={(value: number) => moment().startOf('day').seconds(value).format('mm:ss') }
-            value={this.state.sliderValue}
-        />}
+        data={{ min: 0, max: 5, data: getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition, this.state.elapsed) }} />
+      {this.props.displayedMatch && this.props.displayedMatch.data && <Slider
+        min={0}
+        max={this.props.displayedMatch.data.attributes.duration}
+        stepSize={15}
+        labelStepSize={60}
+        onChange={(value: number) => this.setState({ elapsed: value })}
+        labelRenderer={(value: number) => moment().startOf('day').seconds(value).format('mm:ss')}
+        value={this.state.elapsed}
+      />}
+      {this.props.displayedMatch && this.props.displayedMatch.data && <ButtonGroup minimal={true} large={false}>
+        <Button icon="fast-backward" />
+        <Button icon={!this.state.isPlaying ? 'play' : 'pause'} onClick={this.playPause} />
+        <Button icon="fast-forward" />
+        <Button icon="stop" onClick={this.stop} />
+      </ButtonGroup>}
 
     </div>)
   }

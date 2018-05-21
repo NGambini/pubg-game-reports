@@ -1,6 +1,6 @@
 // import * as _ from 'lodash'
 // import * as h337 from 'heatmap.js'
-import * as ReactDOM from 'react-dom'
+// import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 // import { debounce } from 'lodash'
 
@@ -18,67 +18,61 @@ type HeatmapProps = {
   }
 }
 
-export class Heatmap extends React.Component<HeatmapProps, {}> {
-  // private heatmapInstance: h337.Heatmap<"value", "x", "y">
+type HeatmapState = {
+  canvas: HTMLCanvasElement
+}
+
+export class Heatmap extends React.Component<HeatmapProps, HeatmapState> {
   private heatmap: any
 
-  constructor(props: HeatmapProps) {
-    super(props)
-
-    this.heatmap = new WebGLHeatmap({
-      canvas: ReactDOM.findDOMNode(this),
-      width: 800,
-      height: 800
-    })
+  constructor(props: HeatmapProps, state: HeatmapState) {
+    super(props, state)
+    this.refBinder = this.refBinder.bind(this)
   }
 
-  private setupHeatMap() {
-    // const { style, config } = this.props
+  public componentWillMount() {
 
-    // const width = style.width.replace('px', '')
-    // const height = style.height.replace('px', '')
-
-    // let c = config || {}
-    // let _container = ReactDOM.findDOMNode(this)
-    // let defaultCfg = {
-    //   width: width,
-    //   height: height,
-    //   radius: 10,
-    //   // opacity: .6
-    // }
-    // let _cfg = _.merge(defaultCfg, c)
-    // _cfg.container = _container
-    // this.heatmapInstance = h337.create(_cfg)
-    // this.setState({ cfg: _cfg })
   }
+
+  public componentDidUpdate(prevProps: HeatmapProps, prevState: HeatmapState) {
+    if (this.state && this.state.canvas && (!prevState || this.state.canvas != prevState.canvas)) {
+      // if new canvas ref, init the heatmap
+      this.heatmap = new WebGLHeatmap({
+        canvas: this.state.canvas,
+        width: 800,
+        height: 800
+      })
+    }
+
+    if (this.props.data && prevProps.data) {
+      const finalData = this.props.data.data.map(d => ({
+        x: d.x / 816000.0 * 800,
+        y: d.y / 816000.0 * 800,
+        intensity: 0.35,
+        size: 15
+      }))
+
+      this.heatmap.clear()
+      this.heatmap.addPoints(finalData)
+      this.heatmap.update()
+      this.heatmap.display()
+    }
+  }
+
 
   componentDidMount() {
-        this.setupHeatMap()
   }
 
-  componentDidUpdate() {
-    const { style, data } = this.props
 
-    const width = style.width.replace('px', '')
-    const height = style.height.replace('px', '')
-
-    // now adapt data for the ratio
-    const finalData = data.data.map(d => ({
-      x: d.x / 816000.0 * width,
-      y: d.y / 816000.0 * height,
-      intensity: d.value,
-      size: 1
-    }))
-
-
-    this.heatmap.addPoints(finalData)
-    this.heatmap.update()
-    this.heatmap.display()
+  public refBinder(input: HTMLCanvasElement) {
+    this.setState({
+      canvas: input
+    }) 
   }
 
   render() {
     return (
-      <canvas className={'map-' + this.props.background}/>
+      <canvas ref={this.refBinder} className={'map-' + this.props.background} />
     )
   }
 }
