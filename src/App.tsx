@@ -9,7 +9,7 @@ import GameSelection from './components/selection/GameSelection'
 import Game from './components/game/Game'
 import store from './state/store'
 
-import './App.css'
+import './App.scss'
 
 class App extends React.Component {
   public render() {
