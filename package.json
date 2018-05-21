@@ -22,7 +22,8 @@
     "redux": "^3.7.2",
     "redux-axios-middleware": "^4.0.0",
     "redux-saga": "^0.16.0",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "webgl-heatmap": "^0.2.3"
   },
   "scripts": {
     "start": "react-scripts-ts start",
@@ -41,6 +42,7 @@
     "@types/react-redux": "^5.0.19",
     "@types/react-router-dom": "^4.2.6",
     "@types/react-router-redux": "^5.0.13",
+    "ify-loader": "^1.1.0",
     "typescript": "^2.8.3"
   }
 }

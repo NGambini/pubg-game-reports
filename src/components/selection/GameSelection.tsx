@@ -13,7 +13,7 @@ import IStoreState from 'state/IStoreState'
 import GameTable from './GameTable'
 
 import { Select, ItemRenderer, ItemPredicate } from '@blueprintjs/select'
-import { MenuItem, Button, Label } from '@blueprintjs/core'
+import { MenuItem, Button, Label, Card, Elevation } from '@blueprintjs/core'
 
 
 const RegionSelect = Select.ofType<Region>()
@@ -96,28 +96,33 @@ export class GameSelectionInternal extends React.Component<DispatchToProps & Sta
 
     return (
       <div>
-        <form onSubmit={this.handleSubmit}>
-          {/* <Label text='Token'>
-            <input className='pt-input' type='text' value={this.state.authToken} onChange={this.changeToken} />
-          </Label> */}
-          <Label text='Player Name: '>
-            <input className='pt-input' type='text' placeholder='elitekiller1337' value={this.state.playerName} onChange={this.changePlayerName} />
-          </Label>
-          <Label text='Server: '>
-            <RegionSelect
-              items={AllRegions}
-              itemPredicate={filterRegion}
-              itemRenderer={renderRegion}
-              onItemSelect={this.changeRegion}
-              noResults={<MenuItem disabled={true} text='No results.' />}
-            >
-              <Button rightIcon='caret-down' text={this.state.regionId} disabled={false} />
-            </RegionSelect>
-          </Label>
-          <Button rightIcon='tick' type='submit' text='Submit' />
-        </form>
-        <Button rightIcon='tick' type='button' text='get match detailed' onClick={this.getMatchesDetailed}/>
-        <GameTable matchesArray={this.props.matches}/>
+        <Card interactive={true} elevation={Elevation.TWO}>
+          <h5>Find your matches</h5>
+          <form onSubmit={this.handleSubmit}>
+            <Label text='Player Name: ' className='pt-inline'>
+              <input className='pt-input' type='text' placeholder='elitekiller1337' value={this.state.playerName} onChange={this.changePlayerName} />
+            </Label>
+            <Label text='Server: ' className='pt-inline'>
+              <div className="pt-input-group">
+                <RegionSelect
+                  items={AllRegions}
+                  itemPredicate={filterRegion}
+                  itemRenderer={renderRegion}
+                  onItemSelect={this.changeRegion}
+                  noResults={<MenuItem disabled={true} text='No results.' />}
+                >
+                  <Button rightIcon='caret-down' text={this.state.regionId} disabled={false} />
+                </RegionSelect>
+              </div>
+            </Label>
+            <Button rightIcon='tick' type='submit' text='Submit' />
+          </form>
+          <Button rightIcon='tick' type='button' text='get match detailed' onClick={this.getMatchesDetailed} />
+        </Card>
+        <br />
+        <Card>
+          <GameTable matchesArray={this.props.matches} />
+        </Card>
       </div>
     )
   }
