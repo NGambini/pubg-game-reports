@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
+import classnamer from 'classnamer'
 
 import Header from 'components/layout/header/Header'
 import Footer from 'components/layout/footer/Footer'
@@ -10,12 +11,13 @@ import Game from './components/game/Game'
 import store from './state/store'
 
 import * as styles from './App.scss'
+import './App.global.scss'
 
 class App extends React.Component {
   public render() {
     return (
       <Provider store={store}>
-        <div className={styles.App}> //'App pt-app pt-dark'
+        <div className={classnamer(styles.App, 'pt-app', 'pt-dark')}>
           <Header />
           <Router>
             <main>

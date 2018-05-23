@@ -97,7 +97,7 @@ module.exports = {
       '.jsx',
     ],
     alias: {
-      
+
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -149,7 +149,7 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
-              
+
               compact: true,
             },
           },
@@ -167,10 +167,46 @@ module.exports = {
               },
             ],
           },
+          // globals
           {
-            test: /\.css$/,
+            test: /\.global\.css$/,
             use: ExtractTextPlugin.extract({
-            fallback: 'style-loader',
+              fallback: 'style-loader',
+              use: [
+                {
+                  loader: 'typings-for-css-modules-loader',
+                  options: {
+                    namedExport: true,
+                    camelCase: true,
+                    localIdentName: '[name]__[local]___[hash:base64:5]'
+                  }
+                }
+              ]
+            })
+          },
+          {
+            test: /\.global\.scss$/,
+            use: ExtractTextPlugin.extract({
+              fallback: 'style-loader',
+              use: [
+                {
+                  loader: 'typings-for-css-modules-loader',
+                  options: {
+                    namedExport: true,
+                    sourceMap: true,
+                    camelCase: true,
+                    importLoaders: 2,
+                    localIdentName: '[name]__[local]___[hash:base64:5]'
+                  }
+                },
+                'sass-loader'
+              ]
+            })
+          },
+          {
+            test: /^((?!\.global).)*\.css$/,
+            use: ExtractTextPlugin.extract({
+              fallback: 'style-loader',
               use: [
                 {
                   loader: 'typings-for-css-modules-loader',
@@ -180,15 +216,14 @@ module.exports = {
                     camelCase: true,
                     localIdentName: '[name]__[local]___[hash:base64:5]'
                   }
-                },
-              'postcss-loader'
+                }
               ]
             })
           },
           {
-            test: /\.scss$/,
+            test: /^((?!\.global).)*\.scss$/,
             use: ExtractTextPlugin.extract({
-            fallback: 'style-loader',
+              fallback: 'style-loader',
               use: [
                 {
                   loader: 'typings-for-css-modules-loader',
@@ -201,7 +236,7 @@ module.exports = {
                     localIdentName: '[name]__[local]___[hash:base64:5]'
                   }
                 },
-              'sass-loader'
+                'sass-loader'
               ]
             })
           },
@@ -267,7 +302,7 @@ module.exports = {
       tsconfig: paths.appTsConfig,
       tslint: paths.appTsLint,
     }),
-    new ExtractTextPlugin({filename: 'styles.css', allChunks: true, disable: process.env.NODE_ENV !== 'production'})
+    new ExtractTextPlugin({ filename: 'styles.css', allChunks: true, disable: process.env.NODE_ENV !== 'production' })
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
