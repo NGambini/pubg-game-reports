@@ -174,7 +174,7 @@ module.exports = {
               fallback: 'style-loader',
               use: [
                 {
-                  loader: 'typings-for-css-modules-loader',
+                  loader: 'css-loader',
                   options: {
                     namedExport: true,
                     camelCase: true,
@@ -190,7 +190,7 @@ module.exports = {
               fallback: 'style-loader',
               use: [
                 {
-                  loader: 'typings-for-css-modules-loader',
+                  loader: 'css-loader',
                   options: {
                     namedExport: true,
                     sourceMap: true,
