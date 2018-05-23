@@ -1,11 +1,13 @@
 import * as React from 'react'
 import * as moment from 'moment'
 
-import { Table, Column, Cell, SelectionModes } from '@blueprintjs/table'
+import { Table, Column, Cell, RegionCardinality } from '@blueprintjs/table'
 import Match from 'state/matches/match.model'
 import { gameMapFromString } from 'state/enums/gameMaps'
 import { Button } from '@blueprintjs/core'
 import { Link } from 'react-router-dom';
+
+import * as styles from './GameTable.scss'
 
 type TableProps = {
   matchesArray: Array<Match>
@@ -66,7 +68,7 @@ export default class GameTable extends React.Component<TableProps> {
 
   public render() {
     return (
-      <Table defaultRowHeight={45} selectionModes={SelectionModes.NONE} numRows={this.props.matchesArray.length}>
+      <Table enableColumnResizing={false} className={styles.gameTable}defaultRowHeight={45} selectionModes={[RegionCardinality.FULL_TABLE]} numRows={this.props.matchesArray.length}>
         <Column name='Game ID' cellRenderer={this.gameIdRenderer} />
         <Column name='Date and time' cellRenderer={this.dateTimeRenderer} />
         <Column name='Map name' cellRenderer={this.mapNameRenderer} />

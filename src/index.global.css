@@ -15,7 +15,7 @@ html, body {
   background-size: cover;
   height: 100%;
   width: 100%;
-  filter: blur(1px) brightness(30%);
+  filter: blur(1px) brightness(5%);
   position: fixed;
   left: 0;
   right: 0;
