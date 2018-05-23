@@ -1,3 +1,24 @@
-@import "~@blueprintjs/core/lib/css/blueprint.css";
+// Custom colors for blueprintjs
+@import "./styles/colors.global";
+
+
+@import "~@blueprintjs/core/src/common/colors";
+
+$pt-app-background-color: $color-theme-darker; //	Application background color
+$pt-text-color: $light-gray5;//	Default text color
+$pt-text-color-muted: $gray4; //	Muted text color
+$pt-text-color-disabled: $gray3;//-disabled	Disabled text color
+$pt-heading-color: $color-theme-bright;//	Text color for headers
+$pt-link-color: $color-theme-bright;//	Text color for links
+$pt-text-selection-color: $color-theme-brighter; //	Text selection color
+$pt-icon-color: $color-theme-bright; //	Default icon color
+$pt-icon-color-hover: $color-theme-bright; //-hover	Hovered icon color
+$pt-icon-color-disabled: $gray3;//-disabled	Disabled icon color
+$pt-icon-color-selected: $color-theme-brighter;//-selected	Selected icon color
+$pt-divider-black: $color-theme-darker;	//Black divider color
+$pt-code-text-color: $color-theme-brighter; //	Code text color
+$pt-code-background-color: $color-theme-dark; //	Code background color
+
+@import "~@blueprintjs/core/src/blueprint.scss";
 @import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
 @import "~@blueprintjs/table/lib/css/table.css";
