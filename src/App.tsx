@@ -6,7 +6,7 @@ import classnamer from 'classnamer'
 import Header from 'components/layout/header/Header'
 import Footer from 'components/layout/footer/Footer'
 
-import GameSelection from './components/selection/GameSelection'
+import GameSelection from './components/selection/ChooseGame'
 import Game from './components/game/Game'
 import store from './state/store'
 

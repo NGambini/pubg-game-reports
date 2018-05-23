@@ -1,0 +1,12 @@
+.card {
+  &-table {
+    width: 90%;
+  }
+  &-form {
+    width: 400px;
+  }
+  &-table, &-form {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

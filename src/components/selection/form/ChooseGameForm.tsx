@@ -1,15 +1,17 @@
 import * as React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
+import { Select, ItemRenderer, ItemPredicate } from '@blueprintjs/select'
+import { MenuItem, Button, Label } from '@blueprintjs/core'
+import classnamer from 'classnamer'
 
+import IStoreState from 'state/IStoreState'
 import Region, { AllRegions } from 'state/playerInfo/regions'
 import Match from 'state/matches/match.model'
 import * as PlayerInfoActions from 'state/playerInfo/playerinfo.actions'
 import * as MatchesActions from 'state/matches/matches.actions'
-import IStoreState from 'state/IStoreState'
 
-import { Select, ItemRenderer, ItemPredicate } from '@blueprintjs/select'
-import { MenuItem, Button, Label } from '@blueprintjs/core'
+import * as styles from './ChooseGameForm.scss'
 
 //#region BlueprintJS Select configuration
 const RegionSelect = Select.ofType<Region>()
@@ -70,7 +72,7 @@ export class ChooseGameForm extends React.Component<DispatchToProps & StateToPro
 
   public render() {
     return (
-      <div>
+      <div className={classnamer(styles.chooseGameForm)}>
         <h5>Find your matches</h5>
           <form onSubmit={this.handleSubmit}>
             <Label text='Player Name: ' className='pt-inline'>

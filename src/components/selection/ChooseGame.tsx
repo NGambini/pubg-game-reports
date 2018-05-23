@@ -9,16 +9,18 @@ import * as MatchesActions from 'state/matches/matches.actions'
 
 import IStoreState from 'state/IStoreState'
 
-import GameTable from './GameTable'
-import ChooseGameForm from './ChooseGameForm'
-import { Card } from '@blueprintjs/core';
+import GameTable from './gameTable/GameTable'
+import ChooseGameForm from 'components/selection/form/ChooseGameForm'
+import { Card } from '@blueprintjs/core'
+
+import * as styles from './ChooseGame.scss'
 
 const initialState = {
 }
 
 type State = Readonly<typeof initialState>
 
-export class GameSelection extends React.Component<DispatchToProps & StateToProps, State> {
+export class ChooseGame extends React.Component<DispatchToProps & StateToProps, State> {
   readonly state: State = initialState
 
   constructor(props: DispatchToProps & StateToProps, state: State) {
@@ -36,13 +38,14 @@ export class GameSelection extends React.Component<DispatchToProps & StateToProp
 
     return (
       <div>
-        <Card>
+        <Card className={styles.cardForm}>
           <ChooseGameForm />
         </Card>
         <br />
-        <Card>
-          <GameTable matchesArray={this.props.matches} />
-        </Card>
+        {this.props.matches.length > 0 ?
+          <Card className={styles.cardTable}>
+            <GameTable matchesArray={this.props.matches} />
+          </Card> : null}
       </div>
     )
   }
@@ -71,5 +74,4 @@ const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): DispatchToProps =>
 export default connect<StateToProps, DispatchToProps, void>(
   mapStateToProps,
   mapDispatchToProps
-)(GameSelection)
-
+)(ChooseGame)

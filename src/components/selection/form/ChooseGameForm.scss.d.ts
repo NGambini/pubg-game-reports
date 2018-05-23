@@ -1,0 +1,1 @@
+export const chooseGameForm: string;
