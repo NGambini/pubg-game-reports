@@ -12,6 +12,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -152,7 +153,6 @@ module.exports = {
               compact: true,
             },
           },
-
           // Compile .tsx?
           {
             test: /\.(ts|tsx)$/,
@@ -167,50 +167,43 @@ module.exports = {
               },
             ],
           },
-          // "postcss" loader applies autoprefixer to our CSS.
-          // "css" loader resolves paths in CSS and adds assets as dependencies.
-          // "style" loader turns CSS into JS modules that inject <style> tags.
-          // In production, we use a plugin to extract that CSS to a file, but
-          // in development "style" loader enables hot editing of CSS.
           {
             test: /\.css$/,
-            use: [
-              require.resolve('style-loader'),
-              {
-                loader: require.resolve('css-loader'),
-                options: {
-                  importLoaders: 1,
+            use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+              use: [
+                {
+                  loader: 'typings-for-css-modules-loader',
+                  options: {
+                    modules: true,
+                    namedExport: true,
+                    camelCase: true,
+                    localIdentName: '[name]__[local]___[hash:base64:5]'
+                  }
                 },
-              },
-              {
-                loader: require.resolve('postcss-loader'),
-                options: {
-                  // Necessary for external CSS imports to work
-                  // https://github.com/facebookincubator/create-react-app/issues/2677
-                  ident: 'postcss',
-                  plugins: () => [
-                    require('postcss-flexbugs-fixes'),
-                    autoprefixer({
-                      browsers: [
-                        '>1%',
-                        'last 4 versions',
-                        'Firefox ESR',
-                        'not ie < 9', // React doesn't support IE8 anyway
-                      ],
-                      flexbox: 'no-2009',
-                    }),
-                  ],
-                },
-              },
-            ],
+              'postcss-loader'
+              ]
+            })
           },
           {
             test: /\.scss$/,
-            loaders: [
-              require.resolve('style-loader'),
-              require.resolve('css-loader'),
-              require.resolve('sass-loader')
-            ]
+            use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+              use: [
+                {
+                  loader: 'typings-for-css-modules-loader',
+                  options: {
+                    modules: true,
+                    namedExport: true,
+                    sourceMap: true,
+                    camelCase: true,
+                    importLoaders: 2,
+                    localIdentName: '[name]__[local]___[hash:base64:5]'
+                  }
+                },
+              'sass-loader'
+              ]
+            })
           },
           // "file" loader makes sure those assets get served by WebpackDevServer.
           // When you `import` an asset, you get its (virtual) filename.
@@ -274,6 +267,7 @@ module.exports = {
       tsconfig: paths.appTsConfig,
       tslint: paths.appTsLint,
     }),
+    new ExtractTextPlugin({filename: 'styles.css', allChunks: true, disable: process.env.NODE_ENV !== 'production'})
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.

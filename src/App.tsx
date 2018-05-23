@@ -9,13 +9,13 @@ import GameSelection from './components/selection/GameSelection'
 import Game from './components/game/Game'
 import store from './state/store'
 
-import './App.scss'
+import * as styles from './App.scss'
 
 class App extends React.Component {
   public render() {
     return (
       <Provider store={store}>
-        <div className='App pt-app pt-dark'>
+        <div className={styles.App}> //'App pt-app pt-dark'
           <Header />
           <Router>
             <main>
