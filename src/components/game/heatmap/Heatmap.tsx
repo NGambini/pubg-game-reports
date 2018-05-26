@@ -1,8 +1,4 @@
-// import * as _ from 'lodash'
-// import * as h337 from 'heatmap.js'
-// import * as ReactDOM from 'react-dom'
 import * as React from 'react'
-// import { debounce } from 'lodash'
 
 import { HeatmapData } from 'state/matches/telemetry/events'
 var WebGLHeatmap = require('webgl-heatmap')
@@ -30,10 +26,6 @@ export class Heatmap extends React.Component<HeatmapProps, HeatmapState> {
     this.refBinder = this.refBinder.bind(this)
   }
 
-  public componentWillMount() {
-
-  }
-
   public componentDidUpdate(prevProps: HeatmapProps, prevState: HeatmapState) {
     if (this.state && this.state.canvas && (!prevState || this.state.canvas != prevState.canvas)) {
       // if new canvas ref, init the heatmap
@@ -58,11 +50,6 @@ export class Heatmap extends React.Component<HeatmapProps, HeatmapState> {
       this.heatmap.display()
     }
   }
-
-
-  componentDidMount() {
-  }
-
 
   public refBinder(input: HTMLCanvasElement) {
     this.setState({
