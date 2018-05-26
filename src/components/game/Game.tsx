@@ -4,10 +4,10 @@ import { ThunkAction } from 'redux-thunk'
 import { ActionCreator } from 'redux'
 import { RouteComponentProps, withRouter } from 'react-router'
 
-
 import IStoreState from 'state/IStoreState'
 import Match from 'state/matches/match.model'
 import { TelemetryEventType } from 'state/matches/telemetry/events'
+import { GameMaps } from 'state/enums/gameMaps'
 import { getEventsOfTypeAsHeatmapDatum, getSafeZones, getPlanePath } from 'state/matches/match.selectors'
 import * as MatchesActions from 'state/matches/matches.actions'
 
@@ -15,7 +15,7 @@ import GameControls from './controls/Controls'
 import TeamInfo from './teaminfo/TeamInfo'
 import GameSummary from './summary/GameSummary'
 import Map from './map/Map'
-import { GameMaps } from 'state/enums/gameMaps';
+
 
 interface OwnProps { }
 
@@ -84,7 +84,6 @@ export class Game extends React.Component<Props, State> {
       <button onClick={this.getMatchTelemetry}>get game telemetry</button>
       <button onClick={this.calcSafeZones}>calc safe zone</button>
 
-      <div>circle coordinates : {JSON.stringify(getSafeZones(this.props.displayedMatch))}</div>
       <GameSummary/>
       <TeamInfo/>
       <GameControls/>

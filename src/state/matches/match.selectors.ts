@@ -54,6 +54,7 @@ export function getPlanePath(match: Match): PlanePath {
 
   const angle = Math.atan2(y1 - y0, x1 - x0)
 
+  // far end so plane path doesnt stop at last air drop
   const endX = x0 + planePathLength * Math.cos(angle)
   const endY = y0 + planePathLength * Math.sin(angle)
 
