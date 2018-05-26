@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Stage, Layer, Circle } from 'react-konva'
+import { Stage, Layer, Circle, Line } from 'react-konva'
 import { Circle as CirclePos, PlanePath } from 'state/matches/telemetry/computedObjects'
 
 type MapCanvasProps = {
@@ -25,6 +25,13 @@ export default class MapCanvas extends React.Component<MapCanvasProps, {}> {
             strokeWidth={2}
             stroke="white" />
         )}
+        {this.props.planePath &&
+          <Line tension={1} stroke="blue" points={[
+            this.props.planePath.startX / 816000.0 * 800,
+            this.props.planePath.startY / 816000.0 * 800,
+            this.props.planePath.endX / 816000.0 * 800,
+            this.props.planePath.endY / 816000.0 * 800
+          ]} />}
       </Layer>
     </Stage>)
   }

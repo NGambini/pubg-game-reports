@@ -8,7 +8,7 @@ import { RouteComponentProps, withRouter } from 'react-router'
 import IStoreState from 'state/IStoreState'
 import Match from 'state/matches/match.model'
 import { TelemetryEventType } from 'state/matches/telemetry/events'
-import { getEventsOfTypeAsHeatmapDatum, getSafeZones } from 'state/matches/match.selectors'
+import { getEventsOfTypeAsHeatmapDatum, getSafeZones, getPlanePath } from 'state/matches/match.selectors'
 import * as MatchesActions from 'state/matches/matches.actions'
 
 import GameControls from './controls/Controls'
@@ -84,12 +84,11 @@ export class Game extends React.Component<Props, State> {
       <button onClick={this.getMatchTelemetry}>get game telemetry</button>
       <button onClick={this.calcSafeZones}>calc safe zone</button>
 
-      {/* <div>plane path : {JSON.stringify(getPlanePath(this.props.displayedMatch))}</div> */}
       <div>circle coordinates : {JSON.stringify(getSafeZones(this.props.displayedMatch))}</div>
       <GameSummary/>
       <TeamInfo/>
       <GameControls/>
-      <Map planePath={null}
+      <Map planePath={getPlanePath(this.props.displayedMatch)}
       circles={getSafeZones(this.props.displayedMatch)}
       mapName={GameMaps.Erangel}
       heatmapData={getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition, this.props.elapsed)} />

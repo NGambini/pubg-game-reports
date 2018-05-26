@@ -38,6 +38,8 @@ export function getEventsOfType(match: Match, eventType: TelemetryEventType): Ar
 }
 
 export function getPlanePath(match: Match): PlanePath {
+  const planePathLength = 200000000
+
   const posEvents = getEventsOfType(match, TelemetryEventType.LogPlayerPosition) as Array<LogPlayerPosition>
   if (posEvents.length === 0) {
     return null
@@ -51,10 +53,16 @@ export function getPlanePath(match: Match): PlanePath {
     y1 = locationsInPlane[locationsInPlane.length - 1].y
 
   const angle = Math.atan2(y1 - y0, x1 - x0)
-  console.log('Math.round(x0 / 800)', Math.round(x0 / 800))
-  console.log('Math.round(y0 / 800)', Math.round(y0 / 800))
-  console.log('angle', angle)
-  return null
+
+  const endX = x0 + planePathLength * Math.cos(angle)
+  const endY = y0 + planePathLength * Math.sin(angle)
+
+  return {
+    endX: endX,
+    endY: endY,
+    startX: x0,
+    startY: y0
+  }
 }
 
 export function getSafeZones(match: Match): Array<Circle> {
