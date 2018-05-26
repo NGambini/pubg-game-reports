@@ -13,6 +13,8 @@ import * as MatchesActions from 'state/matches/matches.actions'
 
 import Heatmap from './map/heatmapOverlay/Heatmap'
 import GameControls from './controls/Controls'
+import TeamInfo from './teaminfo/TeamInfo'
+import GameSummary from './summary/GameSummary'
 
 interface OwnProps { }
 
@@ -83,9 +85,12 @@ export class Game extends React.Component<Props, State> {
 
       {/* <div>plane path : {JSON.stringify(getPlanePath(this.props.displayedMatch))}</div> */}
       <div>circle coordinates : {JSON.stringify(getSafeZones(this.props.displayedMatch))}</div>
+      <GameSummary/>
+      <TeamInfo/>
+      <GameControls/>
       <Heatmap background="erangel" style={{ 'width': '800px', 'height': '800px' }}
         data={{ min: 0, max: 5, data: getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition, this.props.elapsed) }} />
-      <GameControls/>
+
 
     </div>)
   }
