@@ -2,8 +2,8 @@ import Match from './match.model'
 import { TelemetryEventType, HeatmapEvents } from 'state/matches/telemetry/events'
 
 export interface MatchViewState {
-  elapsed: number,
-  startTime: Date,
+  elapsed: number, // number of seconds into playback
+  startTime: number, //timestamp are easier for calculations
   isPlaying: boolean,
   heatmapEvent: HeatmapEvents,
   showCircles: boolean,

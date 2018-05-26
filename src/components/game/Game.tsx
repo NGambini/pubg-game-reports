@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { ThunkAction } from 'redux-thunk'
 import { ActionCreator } from 'redux'
 import { RouteComponentProps, withRouter } from 'react-router'
-import * as moment from 'moment'
+
 
 import IStoreState from 'state/IStoreState'
 import Match from 'state/matches/match.model'
@@ -11,16 +11,12 @@ import { TelemetryEventType } from 'state/matches/telemetry/events'
 import { getEventsOfTypeAsHeatmapDatum, getSafeZones } from 'state/matches/match.selectors'
 import * as MatchesActions from 'state/matches/matches.actions'
 
-import Heatmap from './heatmap/Heatmap'
-
-import { Slider, ButtonGroup, Button } from "@blueprintjs/core"
+import Heatmap from './map/heatmapOverlay/Heatmap'
+import GameControls from './controls/Controls'
 
 interface OwnProps { }
 
 const initialState = {
-  elapsed: 0,
-  startTime: Date.now(),
-  isPlaying: false
 }
 
 type State = typeof initialState
@@ -34,12 +30,14 @@ interface DispatchToProps {
 
 interface StateToProps {
   displayedMatch: Match, // calling the key match would collide with the attr match from withRouter
-  isLoading: boolean
+  isLoading: boolean,
+  elapsed: number
 }
 
 const mapStateToProps = (state: IStoreState) => ({
   displayedMatch: state.matches.matches[state.matches.current],
-  isLoading: true
+  isLoading: true,
+  elapsed: state.matches.viewState.elapsed
 })
 
 const mapDispatchToProps: DispatchToProps = {
@@ -59,11 +57,6 @@ export class Game extends React.Component<Props, State> {
 
     this.getMatchTelemetry = this.getMatchTelemetry.bind(this)
     this.calcSafeZones = this.calcSafeZones.bind(this)
-    this.handleTick = this.handleTick.bind(this)
-    this.stop = this.stop.bind(this)
-    this.playPause = this.playPause.bind(this)
-
-    setInterval(this.handleTick, 1000)
   }
 
   public componentDidMount() {
@@ -80,27 +73,6 @@ export class Game extends React.Component<Props, State> {
     this.props.calcSafeZones(this.props.match.params.gameId)
   }
 
-  public playPause() {
-    this.setState({
-      isPlaying: !this.state.isPlaying,
-      startTime: !this.state.isPlaying ? Date.now(): null
-    })
-  }
-
-  private handleTick() {
-    if (this.state.isPlaying) {
-      this.setState({
-        elapsed: Date.now() - this.state.startTime
-      })
-    }
-  }
-
-  public stop()  {
-    this.setState({
-      isPlaying: false
-    })
-  }
-
   public render() {
     return (<div>
       game detail view
@@ -112,22 +84,8 @@ export class Game extends React.Component<Props, State> {
       {/* <div>plane path : {JSON.stringify(getPlanePath(this.props.displayedMatch))}</div> */}
       <div>circle coordinates : {JSON.stringify(getSafeZones(this.props.displayedMatch))}</div>
       <Heatmap background="erangel" style={{ 'width': '800px', 'height': '800px' }}
-        data={{ min: 0, max: 5, data: getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition, this.state.elapsed) }} />
-      {this.props.displayedMatch && this.props.displayedMatch.data && <Slider
-        min={0}
-        max={this.props.displayedMatch.data.attributes.duration}
-        stepSize={15}
-        labelStepSize={60}
-        onChange={(value: number) => this.setState({ elapsed: value })}
-        labelRenderer={(value: number) => moment().startOf('day').seconds(value).format('mm:ss')}
-        value={this.state.elapsed}
-      />}
-      {this.props.displayedMatch && this.props.displayedMatch.data && <ButtonGroup minimal={true} large={false}>
-        <Button icon="fast-backward" />
-        <Button icon={!this.state.isPlaying ? 'play' : 'pause'} onClick={this.playPause} />
-        <Button icon="fast-forward" />
-        <Button icon="stop" onClick={this.stop} />
-      </ButtonGroup>}
+        data={{ min: 0, max: 5, data: getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition, this.props.elapsed) }} />
+      <GameControls/>
 
     </div>)
   }
