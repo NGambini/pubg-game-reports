@@ -11,10 +11,11 @@ import { TelemetryEventType } from 'state/matches/telemetry/events'
 import { getEventsOfTypeAsHeatmapDatum, getSafeZones } from 'state/matches/match.selectors'
 import * as MatchesActions from 'state/matches/matches.actions'
 
-import Heatmap from './map/heatmapOverlay/Heatmap'
 import GameControls from './controls/Controls'
 import TeamInfo from './teaminfo/TeamInfo'
 import GameSummary from './summary/GameSummary'
+import Map from './map/Map'
+import { GameMaps } from 'state/enums/gameMaps';
 
 interface OwnProps { }
 
@@ -88,10 +89,10 @@ export class Game extends React.Component<Props, State> {
       <GameSummary/>
       <TeamInfo/>
       <GameControls/>
-      <Heatmap background="erangel" style={{ 'width': '800px', 'height': '800px' }}
-        data={{ min: 0, max: 5, data: getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition, this.props.elapsed) }} />
-
-
+      <Map planePath={null}
+      circles={getSafeZones(this.props.displayedMatch)}
+      mapName={GameMaps.Erangel}
+      heatmapData={getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition, this.props.elapsed)} />
     </div>)
   }
 

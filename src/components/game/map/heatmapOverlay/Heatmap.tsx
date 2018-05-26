@@ -3,15 +3,12 @@ import * as React from 'react'
 import { HeatmapData } from 'state/matches/telemetry/events'
 var WebGLHeatmap = require('webgl-heatmap')
 
+import * as styles from './Heatmap.scss'
+
 type HeatmapProps = {
-  background: string,
   style: any,
   config?: any,
-  data: {
-    data: Array<HeatmapData>,
-    min: number,
-    max: number
-  }
+  data: Array<HeatmapData>
 }
 
 type HeatmapState = {
@@ -37,7 +34,7 @@ export class Heatmap extends React.Component<HeatmapProps, HeatmapState> {
     }
 
     if (this.props.data && prevProps.data) {
-      const finalData = this.props.data.data.map(d => ({
+      const finalData = this.props.data.map(d => ({
         x: d.x / 816000.0 * 800,
         y: d.y / 816000.0 * 800,
         intensity: 0.35,
@@ -59,7 +56,7 @@ export class Heatmap extends React.Component<HeatmapProps, HeatmapState> {
 
   render() {
     return (
-      <canvas ref={this.refBinder} className={'map-' + this.props.background} />
+      <canvas className={styles.heatmapCanvas} ref={this.refBinder} />
     )
   }
 }

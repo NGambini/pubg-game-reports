@@ -5,4 +5,3 @@ export const appLogoSpin: string;
 export const appHeader: string;
 export const appTitle: string;
 export const appIntro: string;
-export const mapErangel: string;

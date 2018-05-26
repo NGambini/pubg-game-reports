@@ -1,0 +1,1 @@
+export const mapCanvas: string;
