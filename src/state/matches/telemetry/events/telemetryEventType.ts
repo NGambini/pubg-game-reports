@@ -28,4 +28,6 @@ export enum TelemetryEventType {
   LogMatchEnd = 'LogMatchEnd'
 }
 
+export type HeatmapEvents = TelemetryEventType.LogPlayerPosition | TelemetryEventType.LogPlayerKill
+
 export default TelemetryEventType

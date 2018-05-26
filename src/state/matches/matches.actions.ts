@@ -4,11 +4,13 @@ import { ThunkAction } from 'redux-thunk'
 
 import Match from './match.model'
 import { getTelemetryUrl } from 'state/matches/match.selectors'
+import { MatchViewState } from 'state/matches/matches.state'
 
 import IStoreState from '../IStoreState'
 import { ActionCreator } from 'redux'
 
 export enum MatchesActionKeys {
+  // FETCH actions
   GET_PLAYER_MATCHES = 'GET_PLAYER_MATCHES',
   GET_PLAYER_MATCHES_SUCCESS = 'GET_PLAYER_MATCHES_SUCCESS',
   GET_MATCH_DETAILED = 'GET_MATCH_DETAILED',
@@ -16,8 +18,16 @@ export enum MatchesActionKeys {
   GET_MATCH_TELEMETRY = 'GET_MATCH_TELEMETRY',
   GET_MATCH_TELEMETRY_SUCCESS = 'GET_MATCH_TELEMETRY_SUCCESS',
   GET_PLAYER_MATCHES_DETAILED = 'GET_PLAYER_MATCHES_DETAILED',
+  // VIEW actions
+  SET_VIEW_STATE = 'SET_VIEW_STATE',
   SET_CURRENT_MATCH = 'SET_CURRENT_MATCH',
+  // CALC actions
   CALC_SAFE_ZONES = 'CALC_SAFE_ZONES'
+}
+
+export interface SetViewStateAction {
+  readonly type: MatchesActionKeys.SET_VIEW_STATE,
+  readonly payload: Partial<MatchViewState>
 }
 
 export interface GetPlayerMatchesDetailedAction {
@@ -71,6 +81,13 @@ export interface SetActiveMatchAction {
   readonly type: MatchesActionKeys.SET_CURRENT_MATCH,
   readonly payload: {
     matchId: string
+  }
+}
+
+export function setViewState(data: Partial<MatchViewState>): SetViewStateAction {
+  return {
+    type: MatchesActionKeys.SET_VIEW_STATE,
+    payload: data
   }
 }
 
@@ -175,6 +192,7 @@ type MatchesActions = GetPlayerMatchesAction |
   GetMatchTelemetryAction |
   GetMatchTelemetrySuccessAction |
   CalcSafeZonesAction |
-  GetPlayerMatchesDetailedAction
+  GetPlayerMatchesDetailedAction |
+  SetViewStateAction
 
 export default MatchesActions

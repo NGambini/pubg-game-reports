@@ -15,7 +15,6 @@ function matchFromObject(data: object): Match {
 }
 
 export default function matchesReducer(state: MatchesState = initialState, action: MatchesActions): MatchesState {
-  console.log("action: ", action)
   switch (action.type) {
     case MatchesActionKeys.GET_PLAYER_MATCHES:
       return { ...state, isLoading: true }
@@ -44,6 +43,10 @@ export default function matchesReducer(state: MatchesState = initialState, actio
             computed: { $set: {}} // why do we need this ? see https://github.com/kolodny/immutability-helper/issues/16
           }
         }
+      })
+    case MatchesActionKeys.SET_VIEW_STATE:
+      return update(state, {
+        viewState: { $merge: action.payload }
       })
     case MatchesActionKeys.CALC_SAFE_ZONES:
       return update(state, {
