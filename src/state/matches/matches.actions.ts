@@ -131,7 +131,8 @@ export const getMatchTelemetry: ActionCreator<ThunkAction<void, IStoreState, {}>
 export const getPlayerMatchesDetailed: ActionCreator<ThunkAction<void, IStoreState, {}>> = () => {
   return (dispatch: Dispatch<IStoreState>, getState: () => IStoreState, extraArg: {}) => {
     const shard = getState().playerInfo.regionId
-    const gameIds = Object.keys(getState().matches.matches).map((k) => getState().matches.matches[k].id)
+    const gameIds = Object.keys(getState().matches.matches) //gets the ids of dictionary
+    .filter((k) => !getState().matches.matches[k].data) // avoid already fetched matches
 
     for (let i = 0; i < gameIds.length; i++) {
       dispatch({

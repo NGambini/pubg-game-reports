@@ -31,7 +31,7 @@ export default class GameTable extends React.Component<TableProps> {
           </tr>
         </thead>
         <tbody>
-          {this.props.matchesArray.map((m: Match, index: number) => (<tr>
+          {this.props.matchesArray.map((m: Match, index: number) => (<tr key={m.id}>
             <td className={!m.data ? 'pt-skeleton' : null}>{m.data ? m.data.id : m.id} </td>
             <td className={!m.data ? 'pt-skeleton' : null}>{m.data ? moment(m.data.attributes.createdAt).format('MMMM Do YYYY, h:mm a') : 'Time unknown'}</td>
             <td className={!m.data ? 'pt-skeleton' : null}>{m.data ? gameMapFromString(m.data.attributes.mapName) : 'No map known'} </td>

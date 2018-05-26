@@ -20,11 +20,20 @@ const initialState = {
 
 type State = Readonly<typeof initialState>
 
-export class ChooseGame extends React.Component<DispatchToProps & StateToProps, State> {
+type Props = DispatchToProps & StateToProps
+
+export class ChooseGame extends React.Component<Props, State> {
   readonly state: State = initialState
 
-  constructor(props: DispatchToProps & StateToProps, state: State) {
+  constructor(props: Props, state: State) {
     super(props, state)
+  }
+
+  public componentDidUpdate(prevProps: Props, prevState: State) {
+    // when new matches ids appear we must fetch the detailed object
+    if (prevProps.matches.length != this.props.matches.length) {
+      this.props.getMatchesDetailed()
+    }
   }
 
   public render() {
