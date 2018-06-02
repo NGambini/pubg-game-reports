@@ -8,13 +8,16 @@ import IStoreState from 'state/IStoreState'
 import Match from 'state/matches/match.model'
 import {  HeatmapData } from 'state/matches/telemetry/events'
 import { GameMaps } from 'state/enums/gameMaps'
-import { getEventsOfTypeAsHeatmapDatum, getSafeZones, getPlanePath, getRedZones } from 'state/matches/match.selectors'
+import { getEventsOfTypeAsHeatmapDatum, getSafeZones, getPlanePath } from 'state/matches/match.selectors'
+import { getRedZones } from 'state/matches/telemetry/selectors'
 import * as MatchesActions from 'state/matches/matches.actions'
+import { Circle } from 'state/matches/telemetry/computedObjects'
 
 import GameControls from './controls/Controls'
 import TeamInfo from './teaminfo/TeamInfo'
 import GameSummary from './summary/GameSummary'
 import Map from './map/Map'
+
 
 
 interface OwnProps { }
@@ -35,14 +38,16 @@ interface StateToProps {
   displayedMatch: Match, // calling the key match would collide with the attr match from withRouter
   isLoading: boolean,
   elapsed: number,
-  heatmapData: HeatmapData[]
+  heatmapData: HeatmapData[],
+  redZones: Array<Circle>
 }
 
 const mapStateToProps = (state: IStoreState) => ({
   displayedMatch: state.matches.matches[state.matches.current],
   isLoading: true,
   elapsed: state.matches.viewState.elapsed,
-  heatmapData: getEventsOfTypeAsHeatmapDatum(state)
+  heatmapData: getEventsOfTypeAsHeatmapDatum(state),
+  redZones: getRedZones(state)
 })
 
 const mapDispatchToProps: DispatchToProps = {
@@ -94,7 +99,7 @@ export class Game extends React.Component<Props, State> {
         circles={getSafeZones(this.props.displayedMatch)}
         mapName={GameMaps.Erangel}
         heatmapData={this.props.heatmapData}
-        redZones={getRedZones(this.props.displayedMatch)}
+        redZones={this.props.redZones}
       />
     </div>)
   }

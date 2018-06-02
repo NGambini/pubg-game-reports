@@ -1,5 +1,3 @@
-import * as _ from 'lodash'
-
 import Match, { TelemetryAttributes } from 'state/matches/match.model'
 import {
   TelemetryEventType,
@@ -65,18 +63,6 @@ export function getPlanePath(match: Match): PlanePath {
     startX: x0,
     startY: y0
   }
-}
-
-export function getRedZones(match: Match): Array<Circle> {
-  const gStateEvents = getEventsOfType(match, TelemetryEventType.LogGameStatePeriodic) as Array<LogGameStatePeriodic>
-
-  if (gStateEvents.length === 0) { return null }
-  return _.uniqBy(gStateEvents
-    .filter((e: LogGameStatePeriodic) => e.gameState.redZonePosition)
-    .map((e: LogGameStatePeriodic) => ({
-      location: e.gameState.redZonePosition,
-      radius: e.gameState.redZoneRadius
-    } as Circle)), 'location.x')
 }
 
 export function getSafeZones(match: Match): Array<Circle> {

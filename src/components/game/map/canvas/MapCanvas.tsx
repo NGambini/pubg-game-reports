@@ -19,7 +19,7 @@ export default class MapCanvas extends React.Component<MapCanvasProps, {}> {
       <Layer>
         {this.props.circles && this.props.circles.map((c: CirclePos) =>
           <Circle
-            key={c.radius}
+            key={c.location.x * c.location.y}
             x={c.location.x / 816000.0 * 800}
             y={c.location.y / 816000.0 * 800}
             radius={c.radius / 816000.0 * 800}
@@ -28,7 +28,7 @@ export default class MapCanvas extends React.Component<MapCanvasProps, {}> {
         )}
         {this.props.redZones && this.props.redZones.map((c: CirclePos) =>
           <Circle
-            key={c.radius}
+            key={c.location.x * c.location.y}
             x={c.location.x / 816000.0 * 800}
             y={c.location.y / 816000.0 * 800}
             radius={c.radius / 816000.0 * 800}
