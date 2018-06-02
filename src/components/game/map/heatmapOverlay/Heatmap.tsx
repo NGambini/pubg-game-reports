@@ -40,12 +40,11 @@ export class Heatmap extends React.Component<HeatmapProps, HeatmapState> {
 
 
     if (this.props.data && prevProps.data) {
-
       const finalData = this.props.data.map(d => ({
         x: d.x / 816000.0 * 800,
         y: d.y / 816000.0 * 800,
-        intensity: 0.35,
-        size: 15
+        intensity: 0.20,
+        size: 30
       }))
 
       this.heatmap.clear()

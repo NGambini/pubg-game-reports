@@ -8,7 +8,7 @@ import IStoreState from 'state/IStoreState'
 import Match from 'state/matches/match.model'
 import {  HeatmapData } from 'state/matches/telemetry/events'
 import { GameMaps } from 'state/enums/gameMaps'
-import { getEventsOfTypeAsHeatmapDatum, getSafeZones, getPlanePath } from 'state/matches/match.selectors'
+import { getEventsOfTypeAsHeatmapDatum, getSafeZones, getPlanePath, getRedZones } from 'state/matches/match.selectors'
 import * as MatchesActions from 'state/matches/matches.actions'
 
 import GameControls from './controls/Controls'
@@ -89,10 +89,13 @@ export class Game extends React.Component<Props, State> {
       <GameSummary/>
       <TeamInfo/>
       <GameControls/>
-      <Map planePath={getPlanePath(this.props.displayedMatch)}
-      circles={getSafeZones(this.props.displayedMatch)}
-      mapName={GameMaps.Erangel}
-      heatmapData={this.props.heatmapData} />
+      <Map
+        planePath={getPlanePath(this.props.displayedMatch)}
+        circles={getSafeZones(this.props.displayedMatch)}
+        mapName={GameMaps.Erangel}
+        heatmapData={this.props.heatmapData}
+        redZones={getRedZones(this.props.displayedMatch)}
+      />
     </div>)
   }
 

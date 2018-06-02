@@ -56,7 +56,7 @@ class GameControls extends React.Component<Props, State> {
   private handleTick() {
     if (this.props.viewState.isPlaying) {
       this.props.setViewState({
-        elapsed: this.props.viewState.elapsed + (300)
+        elapsed: this.props.viewState.elapsed + (1000)
       })
     }
   }

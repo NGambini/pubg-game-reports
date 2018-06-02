@@ -4,6 +4,7 @@ import { Circle as CirclePos, PlanePath } from 'state/matches/telemetry/computed
 
 type MapCanvasProps = {
   circles: Array<CirclePos>,
+  redZones: Array<CirclePos>,
   planePath: PlanePath
 }
 
@@ -24,6 +25,15 @@ export default class MapCanvas extends React.Component<MapCanvasProps, {}> {
             radius={c.radius / 816000.0 * 800}
             strokeWidth={2}
             stroke="white" />
+        )}
+        {this.props.redZones && this.props.redZones.map((c: CirclePos) =>
+          <Circle
+            key={c.radius}
+            x={c.location.x / 816000.0 * 800}
+            y={c.location.y / 816000.0 * 800}
+            radius={c.radius / 816000.0 * 800}
+            opacity={0.4}
+            fill="red" />
         )}
         {this.props.planePath &&
           <Line tension={1} stroke="blue" points={[

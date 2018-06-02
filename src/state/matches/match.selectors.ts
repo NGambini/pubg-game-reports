@@ -1,3 +1,5 @@
+import * as _ from 'lodash'
+
 import Match, { TelemetryAttributes } from 'state/matches/match.model'
 import {
   TelemetryEventType,
@@ -65,6 +67,18 @@ export function getPlanePath(match: Match): PlanePath {
   }
 }
 
+export function getRedZones(match: Match): Array<Circle> {
+  const gStateEvents = getEventsOfType(match, TelemetryEventType.LogGameStatePeriodic) as Array<LogGameStatePeriodic>
+
+  if (gStateEvents.length === 0) { return null }
+  return _.uniqBy(gStateEvents
+    .filter((e: LogGameStatePeriodic) => e.gameState.redZonePosition)
+    .map((e: LogGameStatePeriodic) => ({
+      location: e.gameState.redZonePosition,
+      radius: e.gameState.redZoneRadius
+    } as Circle)), 'location.x')
+}
+
 export function getSafeZones(match: Match): Array<Circle> {
   type WeightedCircle = Circle & { weight: number }
   const gStateEvents = getEventsOfType(match, telemetryEventType.LogGameStatePeriodic) as Array<LogGameStatePeriodic>
@@ -97,10 +111,10 @@ export function getSafeZones(match: Match): Array<Circle> {
 export function getEventsOfTypeAsHeatmapDatum(state: IStoreState): Array<HeatmapData> {
   const displayWindowSeconds = 30
   const match = state.matches.matches[state.matches.current],
-        eventType = state.matches.viewState.heatmapEvent,
-        maxTick = state.matches.viewState.elapsed
+    eventType = state.matches.viewState.heatmapEvent,
+    maxTick = state.matches.viewState.elapsed
 
-  
+
 
   if (match && match.telemetry && match.telemetry.length > 0) {
     let filtered = match.telemetry.filter(m => m._T === eventType)
@@ -114,9 +128,9 @@ export function getEventsOfTypeAsHeatmapDatum(state: IStoreState): Array<Heatmap
 
     switch (eventType) {
       case TelemetryEventType.LogPlayerKill:
-      return filtered.map(m => HeatmapTranslator.fromLogPlayerKill(m as LogPlayerKill))
+        return filtered.map(m => HeatmapTranslator.fromLogPlayerKill(m as LogPlayerKill))
       case TelemetryEventType.LogPlayerPosition:
-      return filtered.map(m => HeatmapTranslator.fromLogPlayerPosition(m as LogPlayerPosition))
+        return filtered.map(m => HeatmapTranslator.fromLogPlayerPosition(m as LogPlayerPosition))
       default:
         return []
     }
