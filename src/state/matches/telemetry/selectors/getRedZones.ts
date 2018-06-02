@@ -21,11 +21,11 @@ export function getRedZones(state: IStoreState): Array<Circle> {
         r.circle.location.y === e.gameState.redZonePosition.y)
 
       if (index != -1) {
-        ret[index].endTick = e.time - match.data.attributes.createdAtMilliseconds
+        ret[index].endTick = e.time
       } else {
         ret.push({
-          startTick: e.time - match.data.attributes.createdAtMilliseconds,
-          endTick: e.time - match.data.attributes.createdAtMilliseconds,
+          startTick: e.time,
+          endTick: e.time,
           circle: {
             location: e.gameState.redZonePosition,
             radius: e.gameState.redZoneRadius
@@ -34,11 +34,7 @@ export function getRedZones(state: IStoreState): Array<Circle> {
       }
     })
 
-  return ret.filter((rz: RedZone) => {
-    console.log('rz.startTick', rz.startTick)
-    console.log('rz.endTick', rz.endTick)
-    console.log('elapsed', elapsed)
-
-    return rz.startTick < elapsed && rz.endTick > elapsed
-  }).map((rz: RedZone) => rz.circle)
+  return ret
+    .filter((rz: RedZone) => (rz.startTick < elapsed && rz.endTick > elapsed))
+    .map((rz: RedZone) => rz.circle)
 }

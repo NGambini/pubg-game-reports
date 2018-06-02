@@ -9,7 +9,7 @@ import Match from 'state/matches/match.model'
 import {  HeatmapData } from 'state/matches/telemetry/events'
 import { GameMaps } from 'state/enums/gameMaps'
 import { getEventsOfTypeAsHeatmapDatum, getSafeZones, getPlanePath } from 'state/matches/match.selectors'
-import { getRedZones } from 'state/matches/telemetry/selectors'
+import { getRedZones, getBlueZone } from 'state/matches/telemetry/selectors'
 import * as MatchesActions from 'state/matches/matches.actions'
 import { Circle } from 'state/matches/telemetry/computedObjects'
 
@@ -39,7 +39,8 @@ interface StateToProps {
   isLoading: boolean,
   elapsed: number,
   heatmapData: HeatmapData[],
-  redZones: Array<Circle>
+  redZones: Array<Circle>,
+  blueZone: Circle
 }
 
 const mapStateToProps = (state: IStoreState) => ({
@@ -47,7 +48,8 @@ const mapStateToProps = (state: IStoreState) => ({
   isLoading: true,
   elapsed: state.matches.viewState.elapsed,
   heatmapData: getEventsOfTypeAsHeatmapDatum(state),
-  redZones: getRedZones(state)
+  redZones: getRedZones(state),
+  blueZone: getBlueZone(state)
 })
 
 const mapDispatchToProps: DispatchToProps = {
@@ -100,6 +102,7 @@ export class Game extends React.Component<Props, State> {
         mapName={GameMaps.Erangel}
         heatmapData={this.props.heatmapData}
         redZones={this.props.redZones}
+        blueZone={this.props.blueZone}
       />
     </div>)
   }

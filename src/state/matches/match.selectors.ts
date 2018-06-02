@@ -107,8 +107,8 @@ export function getEventsOfTypeAsHeatmapDatum(state: IStoreState): Array<Heatmap
 
     if (maxTick && match.data) {
       filtered = filtered.filter((e: TelemetryEvent<TelemetryEventType>) => (
-        match.data.attributes.createdAtMilliseconds + maxTick > e.time &&
-        match.data.attributes.createdAtMilliseconds + maxTick - (1000 * displayWindowSeconds) < e.time
+        maxTick > e.time &&
+        maxTick - (1000 * displayWindowSeconds) < e.time
       ))
     }
 

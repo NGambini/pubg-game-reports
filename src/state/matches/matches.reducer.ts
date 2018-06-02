@@ -17,12 +17,12 @@ function matchFromJson(data: object): Match {
   return ret
 }
 
-function telemetryFromJson(data: object): Array<TelemetryEvent<TelemetryEventType>> {
+function telemetryFromJson(data: object, match: Match): Array<TelemetryEvent<TelemetryEventType>> {
   let ret = data as Array<TelemetryEvent<TelemetryEventType>>
 
   // we store events time as milliseconds instead of date for faster computations
   ret = ret.map((e: TelemetryEvent<TelemetryEventType>) => {
-    return ({...e, time: Date.parse(e._D)})
+    return ({...e, time: Date.parse(e._D) - match.data.attributes.createdAtMilliseconds})
   })
 
   return ret
@@ -53,7 +53,7 @@ export default function matchesReducer(state: MatchesState = initialState, actio
       return update(state, {
         matches: {
           [action.payload.config.params['matchId']]: {
-            telemetry: { $set: telemetryFromJson(action.payload.data) },
+            telemetry: { $set: telemetryFromJson(action.payload.data, state.matches[state.current]) },
             computed: { $set: {}} // why do we need this ? see https://github.com/kolodny/immutability-helper/issues/16
           }
         }

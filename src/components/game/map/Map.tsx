@@ -14,7 +14,8 @@ type MapProps = {
   heatmapData: Array<HeatmapData>,
   planePath: PlanePath,
   circles: Array<Circle>,
-  redZones: Array<Circle>
+  redZones: Array<Circle>,
+  blueZone: Circle
 }
 
 export default class Map extends React.Component<MapProps, {}> {
@@ -22,7 +23,12 @@ export default class Map extends React.Component<MapProps, {}> {
     return (
     <div className={styles.mapErangel}>
       <Heatmap style={{ 'width': '800px', 'height': '800px' }} data={this.props.heatmapData} />
-      <MapCanvas circles={this.props.circles} planePath={this.props.planePath} redZones={this.props.redZones} />
+      <MapCanvas
+        blueZone={this.props.blueZone}
+        circles={this.props.circles}
+        planePath={this.props.planePath}
+        redZones={this.props.redZones}
+      />
     </div>)
   }
 }
