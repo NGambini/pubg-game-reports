@@ -17,7 +17,6 @@ export function getBlueZone(state: IStoreState): Circle {
   })
   .sort((a, b) => a.time - b.time)[0]
 
-  console.log("event", event)
   return event ? {
     location: event.gameState.safetyZonePosition,
     radius: event.gameState.safetyZoneRadius,

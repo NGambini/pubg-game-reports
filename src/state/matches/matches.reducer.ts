@@ -3,8 +3,7 @@ import update from 'immutability-helper'
 import MatchesActions, { MatchesActionKeys } from './matches.actions'
 import MatchesState, { initialState } from './matches.state'
 import Match from './match.model'
-import { getSafeZones } from './match.selectors'
-import { TelemetryEvent, TelemetryEventType } from 'state/matches/telemetry/events';
+import { TelemetryEvent, TelemetryEventType } from 'state/matches/telemetry/events'
 
 // we need to ensure the match id can be accessed through instance.id (instead of instance.data.id)
 // so our code works either after GET_ALL_MATCHES OR GET_DETAILED_MATCH
@@ -32,6 +31,7 @@ export default function matchesReducer(state: MatchesState = initialState, actio
   switch (action.type) {
     case MatchesActionKeys.GET_PLAYER_MATCHES:
       return { ...state, isLoading: true }
+
     case MatchesActionKeys.GET_PLAYER_MATCHES_SUCCESS:
       const matchesArray: Array<Match> = action.payload.data.data[0].relationships.matches.data
       const indexedMatches = matchesArray.reduce( // this stores the matches as dictionary
@@ -40,8 +40,10 @@ export default function matchesReducer(state: MatchesState = initialState, actio
           return indexed
         }, {})
       return { ...state, matches: indexedMatches, isLoading: false }
+
     case MatchesActionKeys.SET_CURRENT_MATCH:
       return { ...state, current: action.payload.matchId }
+
     case MatchesActionKeys.GET_MATCH_DETAILED_SUCCESS:
       const match = matchFromJson(action.payload.data)
       return update(state, {
@@ -49,6 +51,7 @@ export default function matchesReducer(state: MatchesState = initialState, actio
           [match.id]: { $set: match }
         }
       })
+
     case MatchesActionKeys.GET_MATCH_TELEMETRY_SUCCESS:
       return update(state, {
         matches: {
@@ -58,20 +61,23 @@ export default function matchesReducer(state: MatchesState = initialState, actio
           }
         }
       })
+
     case MatchesActionKeys.SET_VIEW_STATE:
       return update(state, {
         viewState: { $merge: action.payload }
       })
-    case MatchesActionKeys.CALC_SAFE_ZONES:
-      return update(state, {
-        matches: {
-          [action.payload.matchId]: {
-            computed: {
-              safeZones: { $set: getSafeZones(state.matches[action.payload.matchId]) }
-            }
-          }
-        }
-      })
+
+    // case MatchesActionKeys.CALC_SAFE_ZONES:
+    //   return update(state, {
+    //     matches: {
+    //       [action.payload.matchId]: {
+    //         computed: {
+    //           safeZones: { $set: getSafeZones(state.matches[action.payload.matchId]) }
+    //         }
+    //       }
+    //     }
+    //   })
+
     default:
       return state
   }

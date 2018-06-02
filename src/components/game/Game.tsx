@@ -8,17 +8,15 @@ import IStoreState from 'state/IStoreState'
 import Match from 'state/matches/match.model'
 import {  HeatmapData } from 'state/matches/telemetry/events'
 import { GameMaps } from 'state/enums/gameMaps'
-import { getEventsOfTypeAsHeatmapDatum, getSafeZones, getPlanePath } from 'state/matches/match.selectors'
-import { getRedZones, getBlueZone } from 'state/matches/telemetry/selectors'
+import { getEventsOfTypeAsHeatmapDatum } from 'state/matches/match.selectors'
+import { getRedZones, getBlueZone, getSafeZones, getPlanePath } from 'state/matches/telemetry/selectors'
 import * as MatchesActions from 'state/matches/matches.actions'
-import { Circle } from 'state/matches/telemetry/computedObjects'
+import { Circle, PlanePath } from 'state/matches/telemetry/computedObjects'
 
 import GameControls from './controls/Controls'
 import TeamInfo from './teaminfo/TeamInfo'
 import GameSummary from './summary/GameSummary'
 import Map from './map/Map'
-
-
 
 interface OwnProps { }
 
@@ -38,7 +36,9 @@ interface StateToProps {
   displayedMatch: Match, // calling the key match would collide with the attr match from withRouter
   isLoading: boolean,
   elapsed: number,
+  planePath: PlanePath,
   heatmapData: HeatmapData[],
+  safeZones: Array<Circle>,
   redZones: Array<Circle>,
   blueZone: Circle
 }
@@ -47,7 +47,9 @@ const mapStateToProps = (state: IStoreState) => ({
   displayedMatch: state.matches.matches[state.matches.current],
   isLoading: true,
   elapsed: state.matches.viewState.elapsed,
+  planePath: getPlanePath(state),
   heatmapData: getEventsOfTypeAsHeatmapDatum(state),
+  safeZones: getSafeZones(state),
   redZones: getRedZones(state),
   blueZone: getBlueZone(state)
 })
@@ -97,8 +99,8 @@ export class Game extends React.Component<Props, State> {
       <TeamInfo/>
       <GameControls/>
       <Map
-        planePath={getPlanePath(this.props.displayedMatch)}
-        circles={getSafeZones(this.props.displayedMatch)}
+        planePath={this.props.planePath}
+        circles={this.props.safeZones}
         mapName={GameMaps.Erangel}
         heatmapData={this.props.heatmapData}
         redZones={this.props.redZones}
