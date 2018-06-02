@@ -1,5 +1,3 @@
-import * as moment from 'moment'
-
 import Match, { TelemetryAttributes } from 'state/matches/match.model'
 import {
   TelemetryEventType,
@@ -13,6 +11,7 @@ import {
 import { PlanePath, Circle } from 'state/matches/telemetry/computedObjects'
 import telemetryEventType from 'state/matches/telemetry/events/telemetryEventType'
 import { Location } from 'state/matches/telemetry/objects'
+import IStoreState from '../IStoreState'
 
 //TODO move into selectors file
 export function getTelemetryUrl(match: Match): string {
@@ -95,24 +94,33 @@ export function getSafeZones(match: Match): Array<Circle> {
     .filter((c: WeightedCircle) => c.weight > 4)
 }
 
-export function getEventsOfTypeAsHeatmapDatum(match: Match, eventType: TelemetryEventType, maxTick: number = null): Array<HeatmapData> {
+export function getEventsOfTypeAsHeatmapDatum(state: IStoreState): Array<HeatmapData> {
+  const displayWindowSeconds = 30
+  const match = state.matches.matches[state.matches.current],
+        eventType = state.matches.viewState.heatmapEvent,
+        maxTick = state.matches.viewState.elapsed
+
+  
+
   if (match && match.telemetry && match.telemetry.length > 0) {
     let filtered = match.telemetry.filter(m => m._T === eventType)
-    if (maxTick && match.data) {
-      const gameDate = moment(match.data.attributes.createdAt)
 
-      filtered = filtered.filter((e: TelemetryEvent<TelemetryEventType>) => {
-        return moment(gameDate).add(maxTick, 'seconds').isBefore(e._D)
-      })
+    if (maxTick && match.data) {
+      filtered = filtered.filter((e: TelemetryEvent<TelemetryEventType>) => (
+        match.data.attributes.createdAtMilliseconds + maxTick > e.time &&
+        match.data.attributes.createdAtMilliseconds + maxTick - (1000 * displayWindowSeconds) < e.time
+      ))
     }
+
     switch (eventType) {
       case TelemetryEventType.LogPlayerKill:
-        return filtered.map(m => HeatmapTranslator.fromLogPlayerKill(m as LogPlayerKill))
+      return filtered.map(m => HeatmapTranslator.fromLogPlayerKill(m as LogPlayerKill))
       case TelemetryEventType.LogPlayerPosition:
-        return filtered.map(m => HeatmapTranslator.fromLogPlayerPosition(m as LogPlayerPosition))
+      return filtered.map(m => HeatmapTranslator.fromLogPlayerPosition(m as LogPlayerPosition))
       default:
         return []
     }
   }
+
   return []
 }

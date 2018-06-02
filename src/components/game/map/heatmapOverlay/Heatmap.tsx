@@ -12,10 +12,15 @@ type HeatmapProps = {
 }
 
 type HeatmapState = {
-  canvas: HTMLCanvasElement
+  canvas: HTMLCanvasElement,
+  activated: boolean
 }
 
 export class Heatmap extends React.Component<HeatmapProps, HeatmapState> {
+  readonly state: HeatmapState = {
+    canvas: null,
+    activated: false
+  }
   private heatmap: any
 
   constructor(props: HeatmapProps, state: HeatmapState) {
@@ -33,7 +38,9 @@ export class Heatmap extends React.Component<HeatmapProps, HeatmapState> {
       })
     }
 
+
     if (this.props.data && prevProps.data) {
+
       const finalData = this.props.data.map(d => ({
         x: d.x / 816000.0 * 800,
         y: d.y / 816000.0 * 800,
@@ -51,7 +58,7 @@ export class Heatmap extends React.Component<HeatmapProps, HeatmapState> {
   public refBinder(input: HTMLCanvasElement) {
     this.setState({
       canvas: input
-    }) 
+    })
   }
 
   render() {

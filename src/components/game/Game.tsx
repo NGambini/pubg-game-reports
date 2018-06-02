@@ -6,7 +6,7 @@ import { RouteComponentProps, withRouter } from 'react-router'
 
 import IStoreState from 'state/IStoreState'
 import Match from 'state/matches/match.model'
-import { TelemetryEventType } from 'state/matches/telemetry/events'
+import {  HeatmapData } from 'state/matches/telemetry/events'
 import { GameMaps } from 'state/enums/gameMaps'
 import { getEventsOfTypeAsHeatmapDatum, getSafeZones, getPlanePath } from 'state/matches/match.selectors'
 import * as MatchesActions from 'state/matches/matches.actions'
@@ -34,13 +34,15 @@ interface DispatchToProps {
 interface StateToProps {
   displayedMatch: Match, // calling the key match would collide with the attr match from withRouter
   isLoading: boolean,
-  elapsed: number
+  elapsed: number,
+  heatmapData: HeatmapData[]
 }
 
 const mapStateToProps = (state: IStoreState) => ({
   displayedMatch: state.matches.matches[state.matches.current],
   isLoading: true,
-  elapsed: state.matches.viewState.elapsed
+  elapsed: state.matches.viewState.elapsed,
+  heatmapData: getEventsOfTypeAsHeatmapDatum(state)
 })
 
 const mapDispatchToProps: DispatchToProps = {
@@ -90,7 +92,7 @@ export class Game extends React.Component<Props, State> {
       <Map planePath={getPlanePath(this.props.displayedMatch)}
       circles={getSafeZones(this.props.displayedMatch)}
       mapName={GameMaps.Erangel}
-      heatmapData={getEventsOfTypeAsHeatmapDatum(this.props.displayedMatch, TelemetryEventType.LogPlayerPosition, this.props.elapsed)} />
+      heatmapData={this.props.heatmapData} />
     </div>)
   }
 

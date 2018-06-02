@@ -32,6 +32,10 @@ const mapStateToProps = (state: IStoreState) => ({
 type Props = DispatchToProps & StateToProps
 
 class GameControls extends React.Component<Props, State> {
+  private static tickDuration = 5
+  // // multiplier for play speed
+  // private static playSpeed = 4
+
   constructor(props: Props) {
     super(props)
 
@@ -39,7 +43,7 @@ class GameControls extends React.Component<Props, State> {
     this.stop = this.stop.bind(this)
     this.playPause = this.playPause.bind(this)
 
-    setInterval(this.handleTick, 1000)
+    setInterval(this.handleTick, GameControls.tickDuration)
   }
 
   public playPause() {
@@ -52,7 +56,7 @@ class GameControls extends React.Component<Props, State> {
   private handleTick() {
     if (this.props.viewState.isPlaying) {
       this.props.setViewState({
-        elapsed: Date.now() - this.props.viewState.startTime
+        elapsed: this.props.viewState.elapsed + (300)
       })
     }
   }
@@ -71,7 +75,7 @@ class GameControls extends React.Component<Props, State> {
         labelStepSize={60}
         onChange={(value: number) => this.props.setViewState({ elapsed: value })}
         labelRenderer={(value: number) => moment().startOf('day').seconds(value).format('mm:ss')}
-        value={this.props.viewState.elapsed}
+        value={this.props.viewState.elapsed / 1000}
       />}
       {this.props.match && this.props.match.data && <ButtonGroup minimal={true} large={false}>
         <Button icon="fast-backward" />

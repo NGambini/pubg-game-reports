@@ -68,7 +68,8 @@ export default interface Match {
     id: string,
     attributes: {
       shardId: Region,
-      createdAt: Date,
+      createdAt: string,
+      createdAtMilliseconds: number,
       mapName: string, // todo map enum
       duration: number,
       gameMode: string

@@ -4,12 +4,26 @@ import MatchesActions, { MatchesActionKeys } from './matches.actions'
 import MatchesState, { initialState } from './matches.state'
 import Match from './match.model'
 import { getSafeZones } from './match.selectors'
+import { TelemetryEvent, TelemetryEventType } from 'state/matches/telemetry/events';
 
 // we need to ensure the match id can be accessed through instance.id (instead of instance.data.id)
 // so our code works either after GET_ALL_MATCHES OR GET_DETAILED_MATCH
-function matchFromObject(data: object): Match {
+function matchFromJson(data: object): Match {
   const ret = data as Match
+
   ret.id = ret.data.id
+  ret.data.attributes.createdAtMilliseconds = Date.parse(ret.data.attributes.createdAt)
+
+  return ret
+}
+
+function telemetryFromJson(data: object): Array<TelemetryEvent<TelemetryEventType>> {
+  let ret = data as Array<TelemetryEvent<TelemetryEventType>>
+
+  // we store events time as milliseconds instead of date for faster computations
+  ret = ret.map((e: TelemetryEvent<TelemetryEventType>) => {
+    return ({...e, time: Date.parse(e._D)})
+  })
 
   return ret
 }
@@ -29,7 +43,7 @@ export default function matchesReducer(state: MatchesState = initialState, actio
     case MatchesActionKeys.SET_CURRENT_MATCH:
       return { ...state, current: action.payload.matchId }
     case MatchesActionKeys.GET_MATCH_DETAILED_SUCCESS:
-      const match = matchFromObject(action.payload.data)
+      const match = matchFromJson(action.payload.data)
       return update(state, {
         matches: {
           [match.id]: { $set: match }
@@ -39,7 +53,7 @@ export default function matchesReducer(state: MatchesState = initialState, actio
       return update(state, {
         matches: {
           [action.payload.config.params['matchId']]: {
-            telemetry: { $set: action.payload.data },
+            telemetry: { $set: telemetryFromJson(action.payload.data) },
             computed: { $set: {}} // why do we need this ? see https://github.com/kolodny/immutability-helper/issues/16
           }
         }
