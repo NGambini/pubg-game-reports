@@ -6,7 +6,7 @@ import IStoreState from '../../../IStoreState'
 
 export function getPlayerStory(state: IStoreState): PlayerStory {
   const match = state.matches.matches[state.matches.current]
-  // const elapsed = state.matches.viewState.elapsed
+  const elapsed = state.matches.viewState.elapsed
 
   const pPosEvents = getEventsOfType(match, TelemetryEventType.LogPlayerPosition) as Array<LogPlayerPosition>
 
@@ -14,7 +14,8 @@ export function getPlayerStory(state: IStoreState): PlayerStory {
 
   return {
     points: pPosEvents
-      .filter((p: LogPlayerPosition) => p.character.name === state.playerInfo.playerName)
+      .filter((p: LogPlayerPosition) => p.character.name === 'D2P2')
+      .filter((p: LogPlayerPosition) => p.time < elapsed)
       .map((p: LogPlayerPosition) => p.character.location)
   } 
 }

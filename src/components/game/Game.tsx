@@ -86,6 +86,7 @@ export class Game extends React.Component<Props, State> {
         heatmapData={this.props.heatmapData}
         redZones={this.props.redZones}
         blueZone={this.props.blueZone}
+        playerStory={this.props.playerStory}
       />
     </div>)
   }

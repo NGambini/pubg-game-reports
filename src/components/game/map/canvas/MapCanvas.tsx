@@ -1,12 +1,14 @@
 import * as React from 'react'
 import { Stage, Layer, Circle, Line } from 'react-konva'
-import { Circle as CirclePos, PlanePath } from 'state/matches/telemetry/computedObjects'
+import { Circle as CirclePos, PlanePath, PlayerStory } from 'state/matches/telemetry/computedObjects'
+import { Location } from 'state/matches/telemetry/objects'
 
 type MapCanvasProps = {
   circles: Array<CirclePos>,
   redZones: Array<CirclePos>,
   blueZone: CirclePos,
-  planePath: PlanePath
+  planePath: PlanePath,
+  playerStory: PlayerStory
 }
 
 export default class MapCanvas extends React.Component<MapCanvasProps, {}> {
@@ -16,10 +18,22 @@ export default class MapCanvas extends React.Component<MapCanvasProps, {}> {
   }
 
   public render() {
-    const { blueZone } = this.props
+    const { blueZone, playerStory } = this.props
+
+    const linePoints = new Array<number>()
+
+    if (playerStory) {
+      playerStory.points.forEach((p: Location) => linePoints.push(p.x / 816000.0 * 800, p.y / 816000.0 * 800))
+    }
 
     return (<Stage width={800} height={800} >
       <Layer>
+        {playerStory &&
+          <Line
+            tension={1}
+            stroke="yellow"
+            points={linePoints} />
+        }
         {this.props.blueZone &&
           <Circle
             key={blueZone.location.x * blueZone.location.y}
