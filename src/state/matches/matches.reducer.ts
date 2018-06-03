@@ -67,17 +67,6 @@ export default function matchesReducer(state: MatchesState = initialState, actio
         viewState: { $merge: action.payload }
       })
 
-    // case MatchesActionKeys.CALC_SAFE_ZONES:
-    //   return update(state, {
-    //     matches: {
-    //       [action.payload.matchId]: {
-    //         computed: {
-    //           safeZones: { $set: getSafeZones(state.matches[action.payload.matchId]) }
-    //         }
-    //       }
-    //     }
-    //   })
-
     default:
       return state
   }

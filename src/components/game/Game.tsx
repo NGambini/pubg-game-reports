@@ -9,9 +9,9 @@ import Match from 'state/matches/match.model'
 import {  HeatmapData } from 'state/matches/telemetry/events'
 import { GameMaps } from 'state/enums/gameMaps'
 import { getEventsOfTypeAsHeatmapDatum } from 'state/matches/match.selectors'
-import { getRedZones, getBlueZone, getSafeZones, getPlanePath } from 'state/matches/telemetry/selectors'
+import { getRedZones, getBlueZone, getSafeZones, getPlanePath, getPlayerStory } from 'state/matches/telemetry/selectors'
 import * as MatchesActions from 'state/matches/matches.actions'
-import { Circle, PlanePath } from 'state/matches/telemetry/computedObjects'
+import { Circle, PlanePath, PlayerStory } from 'state/matches/telemetry/computedObjects'
 
 import GameControls from './controls/Controls'
 import TeamInfo from './teaminfo/TeamInfo'
@@ -27,9 +27,7 @@ type State = typeof initialState
 
 interface DispatchToProps {
   setCurrentMatch: (matchId: string) => MatchesActions.SetActiveMatchAction,
-  calcSafeZones: (matchId?: string) => MatchesActions.CalcSafeZonesAction,
-  getMatchDetailed: ActionCreator<ThunkAction<void, IStoreState, {}>>,
-  getMatchTelemetry: ActionCreator<ThunkAction<void, IStoreState, {}>>
+  getMatchDetailed: ActionCreator<ThunkAction<void, IStoreState, {}>>
 }
 
 interface StateToProps {
@@ -40,25 +38,25 @@ interface StateToProps {
   heatmapData: HeatmapData[],
   safeZones: Array<Circle>,
   redZones: Array<Circle>,
-  blueZone: Circle
+  blueZone: Circle,
+  playerStory: PlayerStory
 }
 
 const mapStateToProps = (state: IStoreState) => ({
   displayedMatch: state.matches.matches[state.matches.current],
-  isLoading: true,
+  isLoading: false,
   elapsed: state.matches.viewState.elapsed,
   planePath: getPlanePath(state),
   heatmapData: getEventsOfTypeAsHeatmapDatum(state),
   safeZones: getSafeZones(state),
   redZones: getRedZones(state),
-  blueZone: getBlueZone(state)
+  blueZone: getBlueZone(state),
+  playerStory: getPlayerStory(state)
 })
 
 const mapDispatchToProps: DispatchToProps = {
   setCurrentMatch: MatchesActions.setCurrentMatch,
-  calcSafeZones: MatchesActions.calcSafeZones,
-  getMatchDetailed: MatchesActions.getMatchDetailed,
-  getMatchTelemetry: MatchesActions.getMatchTelemetry,
+  getMatchDetailed: MatchesActions.getMatchDetailed
 }
 
 type Props = OwnProps & DispatchToProps & StateToProps & RouteComponentProps<{ gameId: string }>
@@ -68,9 +66,6 @@ export class Game extends React.Component<Props, State> {
 
   constructor(props: Props, state: State) {
     super(props, state)
-
-    this.getMatchTelemetry = this.getMatchTelemetry.bind(this)
-    this.calcSafeZones = this.calcSafeZones.bind(this)
   }
 
   public componentDidMount() {
@@ -79,22 +74,8 @@ export class Game extends React.Component<Props, State> {
     this.props.setCurrentMatch(matchId)
   }
 
-  public getMatchTelemetry() {
-    this.props.getMatchTelemetry(this.props.displayedMatch)
-  }
-
-  public calcSafeZones() {
-    this.props.calcSafeZones(this.props.match.params.gameId)
-  }
-
   public render() {
     return (<div>
-      game detail view
-      <br />
-
-      <button onClick={this.getMatchTelemetry}>get game telemetry</button>
-      <button onClick={this.calcSafeZones}>calc safe zone</button>
-
       <GameSummary/>
       <TeamInfo/>
       <GameControls/>

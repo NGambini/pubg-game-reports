@@ -2,9 +2,13 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import axiosMiddleware from 'redux-axios-middleware'
 import thunk from 'redux-thunk'
 import axios, { AxiosInstance } from 'axios'
+// import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios'
 
 import rootReducer from './rootReducer'
-// import IStoreState from './IStoreState'
+// import { MatchesActionKeys } from 'state/matches/matches.actions'
+// import { getTelemetryUrl } from 'state/matches/match.selectors'
+// import Match from 'state/matches/match.model'
+import { telemetryInterceptor } from 'state/interceptors'
 
 const composeEnhancers = (
   process.env.NODE_ENV === 'development' &&
@@ -19,6 +23,9 @@ const pubgApiClient: AxiosInstance = axios.create({
   }
 })
 
+pubgApiClient.interceptors.response.use(telemetryInterceptor)
+
+
 const store = createStore(
   rootReducer,
   composeEnhancers(
@@ -28,6 +35,7 @@ const store = createStore(
     )
   )
 )
+
 
 // export store singleton instance
 export default store
