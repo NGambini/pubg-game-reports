@@ -9,6 +9,13 @@ export interface SetCurrentPlayerAction {
   }
 }
 
+export const setCurrentPlayer = (pName: string) => ({
+  type: ViewActionKeys.SET_CURRENT_PLAYER,
+  payload: {
+    player: pName
+  }
+} as SetCurrentPlayerAction)
+
 type ViewActions = SetCurrentPlayerAction
 
 export default ViewActions
