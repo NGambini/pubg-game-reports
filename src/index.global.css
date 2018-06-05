@@ -9,7 +9,7 @@ html, body {
   height: 100%;
   width: 100%;
 }
-/* 
+
 .bgimage {
   background-image: url('./assets/images/background.jpg');
   background-size: cover;
@@ -106,4 +106,4 @@ html, body {
   z-index: 2;
   pointer-events: none;
   animation: flicker 0.9750s infinite;
-} */
+}

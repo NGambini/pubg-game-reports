@@ -1,0 +1,16 @@
+.game {
+  color: black;
+  &-header {
+
+    &-summary {
+      color: black;
+    }
+
+    &-team-info {
+      color: black;
+    }
+  }
+  &-controls {
+    width: 100%;
+  }
+}

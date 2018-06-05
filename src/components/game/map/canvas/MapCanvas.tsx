@@ -30,8 +30,8 @@ export default class MapCanvas extends React.Component<MapCanvasProps, {}> {
       <Layer>
         {playerStory &&
           <Line
-            tension={1}
-            stroke="yellow"
+            tension={2}
+            stroke="orange"
             points={linePoints} />
         }
         {this.props.blueZone &&

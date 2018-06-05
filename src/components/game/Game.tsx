@@ -6,7 +6,7 @@ import { RouteComponentProps, withRouter } from 'react-router'
 
 import IStoreState from 'state/IStoreState'
 import Match from 'state/matches/match.model'
-import {  HeatmapData } from 'state/matches/telemetry/events'
+import { HeatmapData } from 'state/matches/telemetry/events'
 import { GameMaps } from 'state/enums/gameMaps'
 import { getEventsOfTypeAsHeatmapDatum } from 'state/matches/match.selectors'
 import { getRedZones, getBlueZone, getSafeZones, getPlanePath, getPlayerStory } from 'state/matches/telemetry/selectors'
@@ -17,6 +17,8 @@ import GameControls from './controls/Controls'
 import TeamInfo from './teaminfo/TeamInfo'
 import GameSummary from './summary/GameSummary'
 import Map from './map/Map'
+
+import * as styles from './Game.scss'
 
 interface OwnProps { }
 
@@ -75,19 +77,33 @@ export class Game extends React.Component<Props, State> {
   }
 
   public render() {
-    return (<div>
-      <GameSummary/>
-      <TeamInfo/>
-      <GameControls/>
-      <Map
-        planePath={this.props.planePath}
-        circles={this.props.safeZones}
-        mapName={GameMaps.Erangel}
-        heatmapData={this.props.heatmapData}
-        redZones={this.props.redZones}
-        blueZone={this.props.blueZone}
-        playerStory={this.props.playerStory}
-      />
+    return (<div className={styles.game}>
+      <div className="row">
+        <div className="col-xs-12 col-sm-6">
+          <GameSummary />
+        </div>
+        <div className="col-xs-12 col-sm-6">
+          <TeamInfo />
+        </div>
+      </div>
+      <GameControls />
+
+      <div className="row">
+        <div className="col-xs-12 col-sm-12 col-md-6">
+          <Map
+            planePath={this.props.planePath}
+            circles={this.props.safeZones}
+            mapName={GameMaps.Erangel}
+            heatmapData={this.props.heatmapData}
+            redZones={this.props.redZones}
+            blueZone={this.props.blueZone}
+            playerStory={this.props.playerStory}
+          />
+        </div>
+        <div className="col-xs-12 col-sm-12 col-md-6">
+          player story here
+        </div>
+      </div>
     </div>)
   }
 

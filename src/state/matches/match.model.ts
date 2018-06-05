@@ -29,7 +29,7 @@ export interface ParticipantStatistics {
   vehicleDestroys: number,
   walkDistance: number,
   weaponsAcquired: number,
-  winPlace: 85,
+  winPlace: number,
   winPoints: number,
   winPointsDelta: number
 }
@@ -51,7 +51,7 @@ export interface TelemetryAttributes {
 }
 
 export interface MatchIncluded {
-  type: string,
+  type: 'participant' | 'roster' | 'telemetry',
   id: string,
   attributes: ParticipantAttributes | RosterAttributes | TelemetryAttributes,
   relationships: {
