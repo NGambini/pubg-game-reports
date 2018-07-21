@@ -2,7 +2,8 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import * as moment from 'moment'
 
-import { Slider, ButtonGroup, Button } from "@blueprintjs/core"
+import { Slider, ButtonGroup, Button, Card, Checkbox, Icon } from "@blueprintjs/core"
+
 
 import IStoreState from 'state/IStoreState'
 import { MatchViewState } from 'state/matches/matches.state'
@@ -66,8 +67,16 @@ class GameControls extends React.Component<Props, State> {
       isPlaying: false
     })
   }
+
+  public toggleViewProp(prop: string) {
+    const payload = {} as any
+
+    payload.prop = !this.props.viewState['prop']
+    this.props.setViewState(payload)
+  }
+
   public render() {
-    return (<div>
+    return (<Card>
       {this.props.match && this.props.match.data && <Slider
         min={0}
         max={this.props.match.data.attributes.duration}
@@ -83,7 +92,22 @@ class GameControls extends React.Component<Props, State> {
         <Button icon="fast-forward" />
         <Button icon="stop" onClick={this.stop} />
       </ButtonGroup>}
-    </div>)
+
+    <Checkbox checked={this.props.viewState.showPlanePath} onChange={() => this.toggleViewProp('showPlanePath')}>
+      <Icon icon="user" />
+      Show Plane Path
+    </Checkbox>
+    <Checkbox checked={this.props.viewState.showRedZones} onChange={() => this.toggleViewProp('showRedZones')}>
+      <Icon icon="user" />
+      Show Red Zone
+    </Checkbox>
+    <Checkbox checked={this.props.viewState.showCircles} onChange={() => this.toggleViewProp('showCircles')}>
+      <Icon icon="user" />
+      Show Circles
+    </Checkbox>
+
+
+    </Card>)
   }
 }
 

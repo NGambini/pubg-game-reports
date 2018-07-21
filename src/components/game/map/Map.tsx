@@ -1,13 +1,13 @@
 import * as React from 'react'
+import { Card } from '@blueprintjs/core'
 
 import { GameMaps } from 'state/enums/gameMaps'
 import MapCanvas from './canvas/MapCanvas'
 import Heatmap from './heatmapOverlay/Heatmap'
-
-import * as styles from './Map.scss'
-
 import { HeatmapData } from 'state/matches/telemetry/events'
 import { Circle, PlanePath, PlayerStory } from 'state/matches/telemetry/computedObjects'
+
+import * as styles from './Map.scss'
 
 type MapProps = {
   mapName: GameMaps,
@@ -24,15 +24,17 @@ export default class Map extends React.Component<MapProps, {}> {
     const { blueZone, circles, planePath, redZones, playerStory } = this.props
 
     return (
-    <div className={styles.mapErangel}>
-      <Heatmap style={{ 'width': '800px', 'height': '800px' }} data={this.props.heatmapData} />
-      <MapCanvas
-        blueZone={blueZone}
-        circles={circles}
-        planePath={planePath}
-        redZones={redZones}
-        playerStory={playerStory}
-      />
-    </div>)
+      <Card style={{ 'width': '840px', 'height': '840px' }}>
+        <div className={styles.mapErangel}>
+          <Heatmap style={{ 'width': '800px', 'height': '800px' }} data={this.props.heatmapData} />
+          <MapCanvas
+            blueZone={blueZone}
+            circles={circles}
+            planePath={planePath}
+            redZones={redZones}
+            playerStory={playerStory}
+          />
+        </div>
+      </Card>)
   }
 }
