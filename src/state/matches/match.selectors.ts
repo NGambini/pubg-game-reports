@@ -1,11 +1,14 @@
 import Match, { TelemetryAttributes } from 'state/matches/match.model'
+import { createSelector } from 'reselect'
+
 import {
   TelemetryEventType,
   LogPlayerPosition,
   TelemetryEvent,
   LogPlayerKill,
   HeatmapData,
-  HeatmapTranslator
+  HeatmapTranslator,
+  HeatmapEvents
 } from 'state/matches/telemetry/events'
 import IStoreState from '../IStoreState'
 
@@ -32,7 +35,43 @@ export function getEventsOfType(match: Match, eventType: TelemetryEventType): Ar
   return []
 }
 
-export function getEventsOfTypeAsHeatmapDatum(state: IStoreState): Array<HeatmapData> {
+const getCurrentMatch = (state: IStoreState) => state.matches.matches[state.matches.current]
+
+const getHeatMapEventType = (state: IStoreState) => state.matches.viewState.heatmapEvent
+
+const getMatchElapsed = (state: IStoreState) => state.matches.viewState.elapsed
+
+
+
+export const getEventsOfTypeAsHeatmapDatum = createSelector(
+  [getCurrentMatch, getHeatMapEventType, getMatchElapsed],
+  (match: Match, eventType: HeatmapEvents, maxTick: number) => {
+    const displayWindowSeconds = 10
+
+    if (match && match.telemetry && match.telemetry.length > 0) {
+      let filtered = match.telemetry.filter(m => m._T === eventType)
+  
+      if (maxTick && match.data) {
+        filtered = filtered.filter((e: TelemetryEvent<TelemetryEventType>) => (
+          maxTick > e.time &&
+          maxTick - (1000 * displayWindowSeconds) < e.time
+        ))
+      }
+  
+      switch (eventType) {
+        case TelemetryEventType.LogPlayerKill:
+          return filtered.map(m => HeatmapTranslator.fromLogPlayerKill(m as LogPlayerKill))
+        case TelemetryEventType.LogPlayerPosition:
+          return filtered.map(m => HeatmapTranslator.fromLogPlayerPosition(m as LogPlayerPosition))
+        default:
+          return []
+      }
+    }
+    return []
+  }
+)
+
+export function getEventsOfTypeAsHeatmapDatum2(state: IStoreState): Array<HeatmapData> {
   const displayWindowSeconds = 30
   const match = state.matches.matches[state.matches.current],
     eventType = state.matches.viewState.heatmapEvent,

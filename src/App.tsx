@@ -13,11 +13,6 @@ import store from './state/store'
 import * as styles from './App.scss'
 import './App.global.scss'
 
-// if (process.env.NODE_ENV !== 'production') {
-//   const {whyDidYouUpdate} = require('why-did-you-update');
-//   whyDidYouUpdate(React);
-// }
-
 class App extends React.Component {
   public render() {
     return (
