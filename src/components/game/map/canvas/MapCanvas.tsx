@@ -28,12 +28,12 @@ export default class MapCanvas extends React.Component<MapCanvasProps, {}> {
 
     return (<Stage width={800} height={800} >
       <Layer>
-        {playerStory &&
+        {/* {playerStory &&
           <Line
             tension={2}
             stroke="orange"
             points={linePoints} />
-        }
+        } */}
         {this.props.blueZone &&
           <Circle
             key={blueZone.location.x * blueZone.location.y}
