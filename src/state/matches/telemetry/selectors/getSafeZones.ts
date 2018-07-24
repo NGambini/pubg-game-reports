@@ -5,14 +5,16 @@ import TelemetryEventType from 'state/matches/telemetry/events/telemetryEventTyp
 import { Location } from 'state/matches/telemetry/objects'
 import IStoreState from '../../../IStoreState'
 
+type WeightedCircle = Circle & { weight: number }
+
 export function getSafeZones(state: IStoreState): Array<Circle> {
   const match = state.matches.matches[state.matches.current]
+  if (!match) { return null }
 
-  type WeightedCircle = Circle & { weight: number }
-  const gStateEvents = getEventsOfType(match, TelemetryEventType.LogGameStatePeriodic) as Array<LogGameStatePeriodic>
+  const gStateEvents = getEventsOfType(match.telemetry, TelemetryEventType.LogGameStatePeriodic) as Array<LogGameStatePeriodic>
   if (gStateEvents.length === 0) { return null }
-  const coordsDict: { [id: number]: WeightedCircle } = {}
 
+  const coordsDict: { [id: number]: WeightedCircle } = {}
   gStateEvents.map((e: LogGameStatePeriodic) => ({
     radius: e.gameState.safetyZoneRadius,
     location: {

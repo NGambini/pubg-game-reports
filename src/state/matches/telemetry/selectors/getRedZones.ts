@@ -6,9 +6,10 @@ import IStoreState from '../../../IStoreState'
 
 export function getRedZones(state: IStoreState): Array<Circle> {
   const match = state.matches.matches[state.matches.current]
-  const elapsed = state.matches.viewState.elapsed
+  if (!match) { return null }
 
-  const gStateEvents = getEventsOfType(match, TelemetryEventType.LogGameStatePeriodic) as Array<LogGameStatePeriodic>
+  const elapsed = state.matches.viewState.elapsed
+  const gStateEvents = getEventsOfType(match.telemetry, TelemetryEventType.LogGameStatePeriodic) as Array<LogGameStatePeriodic>
   const ret = new Array<RedZone>()
 
   if (gStateEvents.length === 0) { return null }

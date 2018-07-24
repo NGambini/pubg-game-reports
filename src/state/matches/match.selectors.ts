@@ -28,9 +28,10 @@ export function isMatchTelemetryFetched(match: Match): boolean {
   return match && match.data != undefined && match.telemetry != null && match.telemetry.length > 0
 }
 
-export function getEventsOfType(match: Match, eventType: TelemetryEventType): Array<TelemetryEvent<TelemetryEventType>> {
-  if (match && match.telemetry && match.telemetry.length > 0) {
-    return match.telemetry.filter(m => m._T === eventType)
+export function getEventsOfType(telemetry: Array<TelemetryEvent<TelemetryEventType>>,
+                                eventType: TelemetryEventType): Array<TelemetryEvent<TelemetryEventType>> {
+  if (telemetry && telemetry.length > 0) {
+    return telemetry.filter(m => m._T === eventType)
   }
   return []
 }

@@ -5,13 +5,15 @@ import IStoreState from '../../../IStoreState'
 
 export function getPlanePath(state: IStoreState): PlanePath {
   const match = state.matches.matches[state.matches.current]
-
+  // TODO harcoded
   const planePathLength = 200000000
 
-  const posEvents = getEventsOfType(match, TelemetryEventType.LogPlayerPosition) as Array<LogPlayerPosition>
-  if (posEvents.length === 0) {
-    return null
-  }
+  if (!match) { return null }
+
+  const posEvents = getEventsOfType(match.telemetry, TelemetryEventType.LogPlayerPosition) as Array<LogPlayerPosition>
+
+  if (posEvents.length === 0) { return null }
+
   const planeZ = Math.max.apply(Math, posEvents.map(e => Math.round(e.character.location.z)))
   const locationsInPlane = posEvents
     .filter(e => Math.round(e.character.location.z) === planeZ)

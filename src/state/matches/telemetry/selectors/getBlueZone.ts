@@ -8,14 +8,18 @@ export function getBlueZone(state: IStoreState): Circle {
   const match = state.matches.matches[state.matches.current]
   const elapsed = state.matches.viewState.elapsed
 
-  const gStateEvents = getEventsOfType(match, TelemetryEventType.LogGameStatePeriodic) as Array<LogGameStatePeriodic>
+  if (!match) { return null }
 
+  const gStateEvents = getEventsOfType(match.telemetry, TelemetryEventType.LogGameStatePeriodic) as Array<LogGameStatePeriodic>
   if (gStateEvents.length === 0) { return null }
 
-  const event = gStateEvents.filter((e: LogGameStatePeriodic) => {
-    return elapsed > e.time && elapsed - 10000 < e.time
-  })
-  .sort((a, b) => a.time - b.time)[0]
+  const event = gStateEvents
+    .filter((e: LogGameStatePeriodic) => {
+      return elapsed > e.time
+    })
+    .sort((a, b) => b.time - a.time)[0]
+
+  // console.log(elapsed)
 
   return event ? {
     location: event.gameState.safetyZonePosition,

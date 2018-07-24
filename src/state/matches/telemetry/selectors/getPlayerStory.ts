@@ -7,9 +7,9 @@ import IStoreState from '../../../IStoreState'
 export function getPlayerStory(state: IStoreState): PlayerStory {
   const match = state.matches.matches[state.matches.current]
   const elapsed = state.matches.viewState.elapsed
+  if (!match) { return null }
 
-  const pPosEvents = getEventsOfType(match, TelemetryEventType.LogPlayerPosition) as Array<LogPlayerPosition>
-
+  const pPosEvents = getEventsOfType(match.telemetry, TelemetryEventType.LogPlayerPosition) as Array<LogPlayerPosition>
   if (pPosEvents.length === 0) { return null }
 
   return {

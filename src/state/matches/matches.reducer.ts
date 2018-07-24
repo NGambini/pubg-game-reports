@@ -3,7 +3,8 @@ import update from 'immutability-helper'
 import MatchesActions, { MatchesActionKeys } from './matches.actions'
 import MatchesState, { initialState } from './matches.state'
 import Match from './match.model'
-import { TelemetryEvent, TelemetryEventType } from 'state/matches/telemetry/events'
+import { TelemetryEvent, TelemetryEventType, LogGameStatePeriodic } from 'state/matches/telemetry/events'
+import { getEventsOfType } from 'state/matches/match.selectors'
 
 // we need to ensure the match id can be accessed through instance.id (instead of instance.data.id)
 // so our code works either after GET_ALL_MATCHES OR GET_DETAILED_MATCH
@@ -13,7 +14,57 @@ function matchFromJson(data: object): Match {
   ret.id = ret.data.id
   ret.data.attributes.createdAtMilliseconds = Date.parse(ret.data.attributes.createdAt)
 
+
   return ret
+}
+
+function interpolateBlueZones(telemetry: Array<TelemetryEvent<TelemetryEventType>>): Array<TelemetryEvent<TelemetryEventType>> {
+  // get two occurences of gameState (10 seconds delta)
+  // creates additional data with relative radius (if different)
+  const gStateEvents = getEventsOfType(telemetry, TelemetryEventType.LogGameStatePeriodic) as Array<LogGameStatePeriodic>
+  const eventsToAdd: Array<TelemetryEvent<TelemetryEventType>> = []
+
+  // sort by order
+  gStateEvents.sort((a, b) => a.time - b.time)
+  console.log('sorted: ', gStateEvents.map(e => e.time + ' ' + e._T))
+
+  for (var i = 0 ; i < gStateEvents.length ; i = i + 1 ) {
+    const leftEvent = gStateEvents[i]
+    const rightEvent = gStateEvents[i + 1]
+    const nbToFill = 5
+
+    if (leftEvent && rightEvent) {
+      const timeDiff = rightEvent.time - leftEvent.time
+      // console.log('left time :', leftEvent.time, 'right time : ', rightEvent.time)
+
+      // if ticks are not of same radius, interpolate filler data
+      if (leftEvent.gameState.safetyZoneRadius !== rightEvent.gameState.safetyZoneRadius) {
+        console.log('left event position : ', leftEvent.gameState.safetyZonePosition, ' radius ', leftEvent.gameState.safetyZoneRadius)
+        for (var j = 1 ; j <= nbToFill ; j++) {
+          const newEvent = leftEvent
+          // les positions et radii ne sont pas dans l'ordre
+          newEvent.gameState.safetyZonePosition.x = leftEvent.gameState.safetyZonePosition.x +
+            (leftEvent.gameState.safetyZonePosition.x / rightEvent.gameState.safetyZonePosition.x) * (j / nbToFill)
+          newEvent.gameState.safetyZonePosition.y = leftEvent.gameState.safetyZonePosition.y +
+            (leftEvent.gameState.safetyZonePosition.y / rightEvent.gameState.safetyZonePosition.y) * (j / nbToFill)
+          newEvent.gameState.safetyZoneRadius = rightEvent.gameState.safetyZoneRadius +
+            (rightEvent.gameState.safetyZoneRadius / leftEvent.gameState.safetyZoneRadius) * (j / nbToFill)
+          newEvent.time = newEvent.time + timeDiff * (j / nbToFill)
+          console.log('create event position : ', newEvent.gameState.safetyZonePosition,  ' radius ', newEvent.gameState.safetyZoneRadius)
+
+
+          // eventsToAdd.push(newEvent)
+        }
+        console.log('right event position : ', rightEvent.gameState.safetyZonePosition,  ' radius ', rightEvent.gameState.safetyZoneRadius)
+
+        console.log('---end loop')
+
+      }
+    }
+  }
+
+  console.log('adding these gamestate events : ', eventsToAdd)
+  return telemetry.concat(eventsToAdd)
 }
 
 function telemetryFromJson(data: object, match: Match): Array<TelemetryEvent<TelemetryEventType>> {
@@ -24,7 +75,9 @@ function telemetryFromJson(data: object, match: Match): Array<TelemetryEvent<Tel
     return ({...e, time: Date.parse(e._D) - match.data.attributes.createdAtMilliseconds})
   })
 
-  return ret
+  // we interpolate some extra data for better rendering
+  // TODO better chaining of those
+  return interpolateBlueZones(ret)
 }
 
 export default function matchesReducer(state: MatchesState = initialState, action: MatchesActions): MatchesState {

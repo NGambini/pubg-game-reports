@@ -55,6 +55,7 @@ export class Heatmap extends React.Component<HeatmapProps, HeatmapState> {
   }
 
   public refBinder(input: HTMLCanvasElement) {
+    // QUESTION should refs be in state ?
     this.setState({
       canvas: input
     })
