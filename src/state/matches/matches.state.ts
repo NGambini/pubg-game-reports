@@ -29,6 +29,6 @@ export const initialState: MatchesState = {
     heatmapEvent: TelemetryEventType.LogPlayerPosition,
     showCircles: true,
     showPlanePath: true,
-    showRedZones: false
+    showRedZones: true
   }
 }

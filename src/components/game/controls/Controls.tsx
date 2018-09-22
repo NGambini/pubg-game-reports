@@ -2,13 +2,14 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import * as moment from 'moment'
 
-import { Slider, ButtonGroup, Button, Card, Checkbox, Icon } from "@blueprintjs/core"
-
+import { Slider, ButtonGroup, Button, Checkbox, Icon } from "@blueprintjs/core"
 
 import IStoreState from 'state/IStoreState'
 import { MatchViewState } from 'state/matches/matches.state'
 import Match from 'state/matches/match.model'
 import * as MatchesActions from 'state/matches/matches.actions'
+
+import * as styles from './Controls.scss'
 
 type State = {}
 
@@ -34,8 +35,6 @@ type Props = DispatchToProps & StateToProps
 
 class GameControls extends React.Component<Props, State> {
   private static tickDuration = 5
-  // // multiplier for play speed
-  // private static playSpeed = 4
 
   constructor(props: Props) {
     super(props)
@@ -76,7 +75,7 @@ class GameControls extends React.Component<Props, State> {
   }
 
   public render() {
-    return (<Card>
+    return (<div>
       {this.props.match && this.props.match.data && <Slider
         min={0}
         max={this.props.match.data.attributes.duration}
@@ -92,22 +91,21 @@ class GameControls extends React.Component<Props, State> {
         <Button icon="fast-forward" />
         <Button icon="stop" onClick={this.stop} />
       </ButtonGroup>}
-
-    <Checkbox checked={this.props.viewState.showPlanePath} onChange={() => this.toggleViewProp('showPlanePath')}>
-      <Icon icon="user" />
-      Show Plane Path
-    </Checkbox>
-    <Checkbox checked={this.props.viewState.showRedZones} onChange={() => this.toggleViewProp('showRedZones')}>
-      <Icon icon="user" />
-      Show Red Zone
-    </Checkbox>
-    <Checkbox checked={this.props.viewState.showCircles} onChange={() => this.toggleViewProp('showCircles')}>
-      <Icon icon="user" />
-      Show Circles
-    </Checkbox>
-
-
-    </Card>)
+      <div className={styles.controlsCheckboxContainer}>
+        <Checkbox className={styles.controlsCheckbox} checked={this.props.viewState.showPlanePath} onChange={() => this.toggleViewProp('showPlanePath')}>
+          <Icon style={{ marginRight: '0.3em' }} icon="airplane" />
+          Show Plane Path
+        </Checkbox>
+        <Checkbox className={styles.controlsCheckbox} checked={this.props.viewState.showRedZones} onChange={() => this.toggleViewProp('showRedZones')}>
+          <Icon style={{ marginRight: '0.3em' }} icon="flame" />
+          Show Red Zone
+        </Checkbox>
+        <Checkbox className={styles.controlsCheckbox} checked={this.props.viewState.showCircles} onChange={() => this.toggleViewProp('showCircles')}>
+          <Icon style={{ marginRight: '0.3em' }} icon="circle" />
+          Show Circles
+        </Checkbox>
+      </div>
+    </div>)
   }
 }
 

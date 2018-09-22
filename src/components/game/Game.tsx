@@ -7,13 +7,12 @@ import { RouteComponentProps, withRouter } from 'react-router'
 import IStoreState from 'state/IStoreState'
 import Match from 'state/matches/match.model'
 import { HeatmapData } from 'state/matches/telemetry/events'
-import { GameMaps } from 'state/enums/gameMaps'
+import { gameMapFromString, GameMaps } from 'state/enums/gameMaps'
 import { getEventsOfTypeAsHeatmapDatum } from 'state/matches/match.selectors'
 import { getRedZones, getBlueZone, getSafeZones, getPlanePath, getPlayerStory } from 'state/matches/telemetry/selectors'
 import * as MatchesActions from 'state/matches/matches.actions'
 import { Circle, PlanePath, PlayerStory } from 'state/matches/telemetry/computedObjects'
 
-import GameControls from './controls/Controls'
 import TeamInfo from './teaminfo/TeamInfo'
 import GameSummary from './summary/GameSummary'
 import Map from './map/Map'
@@ -86,14 +85,13 @@ export class Game extends React.Component<Props, State> {
           <TeamInfo />
         </div>
       </div>
-      <GameControls />
 
       <div className="row">
         <div className="col-xs-12 col-sm-12 col-md-9">
           <Map
             planePath={this.props.planePath}
             circles={this.props.safeZones}
-            mapName={GameMaps.Erangel}
+            mapName={this.props.displayedMatch ? gameMapFromString(this.props.displayedMatch.data.attributes.mapName) : GameMaps.Unknown}
             heatmapData={this.props.heatmapData}
             redZones={this.props.redZones}
             blueZone={this.props.blueZone}

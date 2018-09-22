@@ -27,17 +27,17 @@ export default class MapCanvas extends React.Component<MapCanvasProps, {}> {
     const linePoints = new Array<number>()
 
     if (playerStory) {
-      playerStory.points.forEach((p: Location) => linePoints.push(p.x / 816000.0 * 800, p.y / 816000.0 * 800))
+      playerStory.points.forEach((p: Location) => linePoints.push(p.x / 816000.0 * width, p.y / 816000.0 * height))
     }
 
     return (<Stage className={styles.mapCanvas} width={width} height={height} >
       <Layer>
-        {/* {playerStory &&
+        {playerStory &&
           <Line
-            tension={2}
-            stroke="orange"
+            strokeWidth={5}
+            stroke="#62ff06"
             points={linePoints} />
-        } */}
+        }
         {this.props.blueZone &&
           <Circle
             key={blueZone.location.x * blueZone.location.y}
@@ -47,15 +47,15 @@ export default class MapCanvas extends React.Component<MapCanvasProps, {}> {
             strokeWidth={2}
             stroke="blue" />
         }
-        {/* {this.props.circles && this.props.circles.map((c: CirclePos) =>
+        {this.props.circles && this.props.circles.map((c: CirclePos) =>
           <Circle
             key={c.location.x * c.location.y}
-            x={c.location.x / 816000.0 * 800}
-            y={c.location.y / 816000.0 * 800}
-            radius={c.radius / 816000.0 * 800}
+            x={c.location.x / 816000.0 * width}
+            y={c.location.y / 816000.0 * width}
+            radius={c.radius / 816000.0 * width}
             strokeWidth={2}
             stroke="white" />
-        )} */}
+        )}
         {this.props.redZones && this.props.redZones.map((c: CirclePos) =>
           <Circle
             key={c.location.x * c.location.y}

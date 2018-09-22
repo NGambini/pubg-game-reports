@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { Card } from '@blueprintjs/core'
+import classnamer from 'classnamer'
 
 import { GameMaps } from 'state/enums/gameMaps'
 import MapCanvas from './canvas/MapCanvas'
 import Heatmap from './heatmapOverlay/Heatmap'
+import GameControls from '../controls/Controls'
 import { HeatmapData } from 'state/matches/telemetry/events'
 import { Circle, PlanePath, PlayerStory } from 'state/matches/telemetry/computedObjects'
 
@@ -37,13 +39,25 @@ export default class Map extends React.Component<MapProps, MapState> {
   }
 
   public render() {
-    const { blueZone, circles, planePath, redZones, playerStory } = this.props
+    const { blueZone, circles, planePath, redZones, playerStory, mapName } = this.props
     const width = this.state.containerRef ? this.state.containerRef.offsetWidth : void 0
     const height = this.state.containerRef ? this.state.containerRef.offsetHeight : void 0
+    let mapClass
+
+    switch (mapName) {
+      case GameMaps.Erangel:
+        mapClass = styles.mapErangel
+        break
+        case GameMaps.Miramar:
+        mapClass = styles.mapMiramar
+        break
+    }
 
     return (
       <Card>
-        <div ref={this.refBinder} className={styles.mapErangel}>
+        { mapName }
+        <GameControls />
+        <div ref={this.refBinder} className={classnamer(styles.map, mapClass)}>
           {width && height &&
             <>
               <Heatmap data={this.props.heatmapData} width={width} height={height} />

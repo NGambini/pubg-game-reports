@@ -1,0 +1,11 @@
+.controls {
+  body &-checkbox {
+    display: inline-block;
+    margin-right: 1em;
+
+    &-container {
+      text-align: left;
+      padding-left: 25px;
+    }
+  }
+}

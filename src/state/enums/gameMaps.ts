@@ -1,6 +1,7 @@
 export enum GameMaps {
   Erangel = 'Erangel',
   Miramar = 'Miramar',
+  Sanhok = 'Sanhok',
   Unknown = 'Unknown'
 }
 
