@@ -17,7 +17,7 @@ class App extends React.Component {
   public render() {
     return (
       <Provider store={store}>
-        <div className={classnamer(styles.App, 'pt-app', 'pt-dark')}>
+        <div className={classnamer(styles.App, 'pt-app', 'pt-light')}>
           <Header />
           <Router>
             <main>

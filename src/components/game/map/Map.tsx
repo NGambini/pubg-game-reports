@@ -8,6 +8,7 @@ import { HeatmapData } from 'state/matches/telemetry/events'
 import { Circle, PlanePath, PlayerStory } from 'state/matches/telemetry/computedObjects'
 
 import * as styles from './Map.scss'
+import Erangel = require('../../../assets/maps/erangel.jpg');
 
 type MapProps = {
   mapName: GameMaps,
@@ -19,21 +20,44 @@ type MapProps = {
   playerStory: PlayerStory
 }
 
-export default class Map extends React.Component<MapProps, {}> {
+type MapState = {
+  containerRef: HTMLDivElement
+}
+
+export default class Map extends React.Component<MapProps, MapState> {
+  readonly state: MapState = { containerRef: null }
+
+  constructor(props: MapProps) {
+    super(props)
+    this.refBinder = this.refBinder.bind(this)
+  }
+
+  public refBinder(input: HTMLDivElement) {
+    this.setState({containerRef: input})
+  }
+
   public render() {
     const { blueZone, circles, planePath, redZones, playerStory } = this.props
+    const width = this.state.containerRef ? this.state.containerRef.offsetWidth : void 0
+    const height = this.state.containerRef ? this.state.containerRef.offsetHeight : void 0
 
     return (
-      <Card style={{ 'width': '840px', 'height': '840px' }}>
-        <div className={styles.mapErangel}>
-          <Heatmap style={{ 'width': '800px', 'height': '800px' }} data={this.props.heatmapData} />
-          <MapCanvas
-            blueZone={blueZone}
-            circles={circles}
-            planePath={planePath}
-            redZones={redZones}
-            playerStory={playerStory}
-          />
+      <Card>
+        <div ref={this.refBinder} className={styles.mapErangel}>
+          {width && height &&
+            <>
+              <Heatmap data={this.props.heatmapData} width={width} height={height} />
+              <MapCanvas
+                width={width}
+                height={height}
+                blueZone={blueZone}
+                circles={circles}
+                planePath={planePath}
+                redZones={redZones}
+                playerStory={playerStory}
+              />
+            </>}
+          <img src={Erangel} style={{ visibility: "hidden", width: "100%" }} />
         </div>
       </Card>)
   }

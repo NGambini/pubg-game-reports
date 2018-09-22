@@ -6,9 +6,11 @@ var WebGLHeatmap = require('webgl-heatmap')
 import * as styles from './Heatmap.scss'
 
 type HeatmapProps = {
-  style: any,
+  style?: any,
   config?: any,
-  data: Array<HeatmapData>
+  data: Array<HeatmapData>,
+  width?: number,
+  height?: number
 }
 
 type HeatmapState = {
@@ -29,28 +31,30 @@ export class Heatmap extends React.Component<HeatmapProps, HeatmapState> {
   }
 
   public componentDidUpdate(prevProps: HeatmapProps, prevState: HeatmapState) {
-    if (this.state && this.state.canvas && (!prevState || this.state.canvas != prevState.canvas)) {
-      // if new canvas ref, init the heatmap
+    if (this.state && this.state.canvas && (!prevState || this.state.canvas != prevState.canvas || this.props.height != prevProps.height)) {
+      // if new canvas ref or width height changed, init the heatmap
       this.heatmap = new WebGLHeatmap({
         canvas: this.state.canvas,
-        width: 800,
-        height: 800
+        width: this.props.width,
+        height: this.props.height
       })
     }
 
 
     if (this.props.data && prevProps.data) {
       const finalData = this.props.data.map(d => ({
-        x: d.x / 816000.0 * 800,
-        y: d.y / 816000.0 * 800,
-        intensity: 0.20,
-        size: 30
+        x: d.x / 816000.0 * this.props.width,
+        y: d.y / 816000.0 * this.props.height,
+        intensity: 0.5,
+        size: this.props.width / 60
       }))
 
-      this.heatmap.clear()
-      this.heatmap.addPoints(finalData)
-      this.heatmap.update()
-      this.heatmap.display()
+      if (this.heatmap) {
+        this.heatmap.clear()
+        this.heatmap.addPoints(finalData)
+        this.heatmap.update()
+        this.heatmap.display()
+      }
     }
   }
 

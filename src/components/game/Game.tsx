@@ -89,7 +89,7 @@ export class Game extends React.Component<Props, State> {
       <GameControls />
 
       <div className="row">
-        <div className="col-xs-12 col-sm-12 col-md-6">
+        <div className="col-xs-12 col-sm-12 col-md-9">
           <Map
             planePath={this.props.planePath}
             circles={this.props.safeZones}
@@ -100,7 +100,7 @@ export class Game extends React.Component<Props, State> {
             playerStory={this.props.playerStory}
           />
         </div>
-        <div className="col-xs-12 col-sm-12 col-md-6">
+        <div className="col-xs-12 col-sm-12 col-md-3">
           player story here
         </div>
       </div>
