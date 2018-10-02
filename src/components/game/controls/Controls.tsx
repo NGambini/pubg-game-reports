@@ -70,7 +70,7 @@ class GameControls extends React.Component<Props, State> {
   public toggleViewProp(prop: string) {
     const payload = {} as any
 
-    payload.prop = !this.props.viewState['prop']
+    payload[prop] = !this.props.viewState[prop]
     this.props.setViewState(payload)
   }
 
