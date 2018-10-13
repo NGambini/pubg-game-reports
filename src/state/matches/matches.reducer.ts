@@ -26,7 +26,6 @@ function interpolateBlueZones(telemetry: Array<TelemetryEvent<TelemetryEventType
 
   // sort by order
   gStateEvents.sort((a, b) => a.time - b.time)
-  console.log('sorted: ', gStateEvents.map(e => e.time + ' ' + e._T))
 
   for (var i = 0 ; i < gStateEvents.length ; i = i + 1 ) {
     const leftEvent = gStateEvents[i]
@@ -38,7 +37,6 @@ function interpolateBlueZones(telemetry: Array<TelemetryEvent<TelemetryEventType
 
       // if ticks are not of same radius, interpolate filler data
       if (leftEvent.gameState.safetyZoneRadius !== rightEvent.gameState.safetyZoneRadius) {
-        console.log('left event position : ', leftEvent.gameState.safetyZonePosition, ' radius ', leftEvent.gameState.safetyZoneRadius)
         for (var j = 1 ; j <= nbToFill ; j++) {
           const newEvent = leftEvent
           // les positions et radii ne sont pas dans l'ordre
