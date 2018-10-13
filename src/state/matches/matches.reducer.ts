@@ -35,7 +35,6 @@ function interpolateBlueZones(telemetry: Array<TelemetryEvent<TelemetryEventType
 
     if (leftEvent && rightEvent) {
       const timeDiff = rightEvent.time - leftEvent.time
-      // console.log('left time :', leftEvent.time, 'right time : ', rightEvent.time)
 
       // if ticks are not of same radius, interpolate filler data
       if (leftEvent.gameState.safetyZoneRadius !== rightEvent.gameState.safetyZoneRadius) {
@@ -50,20 +49,12 @@ function interpolateBlueZones(telemetry: Array<TelemetryEvent<TelemetryEventType
           newEvent.gameState.safetyZoneRadius = rightEvent.gameState.safetyZoneRadius +
             (rightEvent.gameState.safetyZoneRadius / leftEvent.gameState.safetyZoneRadius) * (j / nbToFill)
           newEvent.time = newEvent.time + timeDiff * (j / nbToFill)
-          console.log('create event position : ', newEvent.gameState.safetyZonePosition,  ' radius ', newEvent.gameState.safetyZoneRadius)
-
-
           // eventsToAdd.push(newEvent)
         }
-        console.log('right event position : ', rightEvent.gameState.safetyZonePosition,  ' radius ', rightEvent.gameState.safetyZoneRadius)
-
-        console.log('---end loop')
-
       }
     }
   }
 
-  console.log('adding these gamestate events : ', eventsToAdd)
   return telemetry.concat(eventsToAdd)
 }
 

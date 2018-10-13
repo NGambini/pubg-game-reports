@@ -11,11 +11,14 @@ export function getPlayerStory(state: IStoreState): PlayerStory {
 
   const pPosEvents = getEventsOfType(match.telemetry, TelemetryEventType.LogPlayerPosition) as Array<LogPlayerPosition>
   if (pPosEvents.length === 0) { return null }
+  
+  // we find the first parachute event and store it's tick
+  const firstTick = pPosEvents.find((p: LogPlayerPosition) => p.vehicle.vehicleType === 'Parachute').time
 
   return {
     points: pPosEvents
       .filter((p: LogPlayerPosition) => p.character.name === 'D2P2')
-      .filter((p: LogPlayerPosition) => p.time < elapsed)
+      .filter((p: LogPlayerPosition) => p.time < elapsed && p.time > firstTick)
       .map((p: LogPlayerPosition) => p.character.location)
   } 
 }

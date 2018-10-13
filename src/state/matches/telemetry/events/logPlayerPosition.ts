@@ -1,9 +1,10 @@
 import TelemetryEventType from './telemetryEventType'
 import { TelemetryEvent } from './telemetryEvent'
-import { Character } from '../objects'
+import { Character, Vehicle } from '../objects'
 
 export interface LogPlayerPosition extends TelemetryEvent<TelemetryEventType.LogPlayerPosition> {
   character: Character
   elapsedTime: number
-  numAlivePlayers: number
+  numAlivePlayers: number,
+  vehicle: Vehicle
 }

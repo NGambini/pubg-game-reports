@@ -1,6 +1,6 @@
 export interface Vehicle {
-  vehicleType: number,
-  vehicleId: number,
+  vehicleType: string,
+  vehicleId: string,
   healthPercent: number,
   fuelPercent: number
 }
