@@ -59,6 +59,9 @@ function interpolateBlueZones(telemetry: Array<TelemetryEvent<TelemetryEventType
 function telemetryFromJson(data: object, match: Match): Array<TelemetryEvent<TelemetryEventType>> {
   let ret = data as Array<TelemetryEvent<TelemetryEventType>>
 
+  if (!ret || !match) {
+    return []
+  }
   // we store events time as milliseconds instead of date for faster computations
   ret = ret.map((e: TelemetryEvent<TelemetryEventType>) => {
     return ({...e, time: Date.parse(e._D) - match.data.attributes.createdAtMilliseconds})
