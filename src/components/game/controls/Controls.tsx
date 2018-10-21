@@ -86,8 +86,8 @@
           min={0}
           max={this.props.match.data.attributes.duration}
           stepSize={15}
-          labelStepSize={60}
-          onChange={(value: number) => this.props.setViewState({ elapsed: value })}
+          labelStepSize={180}
+          onChange={(value: number) => this.props.setViewState({ elapsed: value * 1000 })}
           labelRenderer={(value: number) => moment().startOf('day').seconds(value).format('mm:ss')}
           value={this.props.viewState.elapsed / 1000}
         />}
