@@ -15,7 +15,8 @@ type MapCanvasProps = {
   planePath: PlanePath,
   playerStory: PlayerStory,
   width?: number,
-  height?: number
+  height?: number,
+  mapSize: number,
 }
 
 
@@ -36,12 +37,12 @@ class MapCanvas extends React.Component<Props, {}> {
   }
 
   public render() {
-    const { blueZone, playerStory, width, height } = this.props
+    const { blueZone, playerStory, width, height, mapSize } = this.props
 
     const linePoints = new Array<number>()
 
     if (playerStory) {
-      playerStory.points.forEach((p: Location) => linePoints.push(p.x / 816000.0 * width, p.y / 816000.0 * height))
+      playerStory.points.forEach((p: Location) => linePoints.push(p.x / mapSize * width, p.y / mapSize * height))
     }
 
     return (<Stage className={styles.mapCanvas} width={width} height={height} >
@@ -55,36 +56,36 @@ class MapCanvas extends React.Component<Props, {}> {
         {this.props.viewState.showCircles && this.props.blueZone &&
           <Circle
             key={blueZone.location.x * blueZone.location.y}
-            x={blueZone.location.x / 816000.0 * width}
-            y={blueZone.location.y / 816000.0 * width}
-            radius={blueZone.radius / 816000.0 * width}
+            x={blueZone.location.x / mapSize * width}
+            y={blueZone.location.y / mapSize * width}
+            radius={blueZone.radius / mapSize * width}
             strokeWidth={2}
             stroke="blue" />
         }
         {this.props.viewState.showCircles && this.props.circles && this.props.circles.map((c: CirclePos) =>
           <Circle
             key={c.location.x * c.location.y}
-            x={c.location.x / 816000.0 * width}
-            y={c.location.y / 816000.0 * width}
-            radius={c.radius / 816000.0 * width}
+            x={c.location.x / mapSize * width}
+            y={c.location.y / mapSize * width}
+            radius={c.radius / mapSize * width}
             strokeWidth={2}
             stroke="white" />
         )}
         {this.props.viewState.showRedZones && this.props.redZones && this.props.redZones.map((c: CirclePos) =>
           <Circle
             key={c.location.x * c.location.y}
-            x={c.location.x / 816000.0 * width}
-            y={c.location.y / 816000.0 * width}
-            radius={c.radius / 816000.0 * width}
+            x={c.location.x / mapSize * width}
+            y={c.location.y / mapSize * width}
+            radius={c.radius / mapSize * width}
             opacity={0.4}
             fill="red" />
         )}
         {this.props.viewState.showPlanePath && this.props.planePath &&
           <Line tension={1} stroke="yellow" points={[
-            this.props.planePath.startX / 816000.0 * width,
-            this.props.planePath.startY / 816000.0 * width,
-            this.props.planePath.endX / 816000.0 * width,
-            this.props.planePath.endY / 816000.0 * width
+            this.props.planePath.startX / mapSize * width,
+            this.props.planePath.startY / mapSize * width,
+            this.props.planePath.endX / mapSize * width,
+            this.props.planePath.endY / mapSize * width
           ]} />}
       </Layer>
     </Stage>)

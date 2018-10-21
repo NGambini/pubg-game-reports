@@ -12,6 +12,9 @@ import { Circle, PlanePath, PlayerStory } from 'state/matches/telemetry/computed
 import * as styles from './Map.scss'
 import Erangel = require('../../../assets/maps/erangel.jpg');
 
+const BATTLE_ROYALE_SIZE = 816000
+const MINI_ROYALE_SIZE = 816000 / 2
+
 type MapProps = {
   mapName: GameMaps,
   heatmapData: Array<HeatmapData>,
@@ -35,32 +38,43 @@ export default class Map extends React.Component<MapProps, MapState> {
   }
 
   public refBinder(input: HTMLDivElement) {
-    this.setState({containerRef: input})
+    this.setState({ containerRef: input })
   }
 
   public render() {
     const { blueZone, circles, planePath, redZones, playerStory, mapName } = this.props
     const width = this.state.containerRef ? this.state.containerRef.offsetWidth : void 0
     const height = this.state.containerRef ? this.state.containerRef.offsetHeight : void 0
-    let mapClass
+    let mapClass, mapSize
 
     switch (mapName) {
       case GameMaps.Erangel:
         mapClass = styles.mapErangel
+        mapSize = BATTLE_ROYALE_SIZE
         break
-        case GameMaps.Miramar:
+      case GameMaps.Miramar:
         mapClass = styles.mapMiramar
+        mapSize = BATTLE_ROYALE_SIZE
+        break
+      case GameMaps.Sanhok:
+        mapClass = styles.mapSanhok
+        mapSize = MINI_ROYALE_SIZE
         break
     }
 
     return (
       <Card>
-        { mapName }
+        {mapName}
         <GameControls />
         <div ref={this.refBinder} className={classnamer(styles.map, mapClass)}>
           {width && height &&
             <>
-              <Heatmap data={this.props.heatmapData} width={width} height={height} />
+              <Heatmap
+                data={this.props.heatmapData}
+                width={width}
+                height={height}
+                mapSize={mapSize}
+              />
               <MapCanvas
                 width={width}
                 height={height}
@@ -69,6 +83,7 @@ export default class Map extends React.Component<MapProps, MapState> {
                 planePath={planePath}
                 redZones={redZones}
                 playerStory={playerStory}
+                mapSize={mapSize}
               />
             </>}
           <img src={Erangel} style={{ visibility: "hidden", width: "100%" }} />

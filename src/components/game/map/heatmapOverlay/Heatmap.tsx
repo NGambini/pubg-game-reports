@@ -10,7 +10,8 @@ type HeatmapProps = {
   config?: any,
   data: Array<HeatmapData>,
   width?: number,
-  height?: number
+  height?: number,
+  mapSize: number
 }
 
 type HeatmapState = {
@@ -43,8 +44,8 @@ export class Heatmap extends React.Component<HeatmapProps, HeatmapState> {
 
     if (this.props.data && prevProps.data) {
       const finalData = this.props.data.map(d => ({
-        x: d.x / 816000.0 * this.props.width,
-        y: d.y / 816000.0 * this.props.height,
+        x: d.x / this.props.mapSize * this.props.width,
+        y: d.y / this.props.mapSize * this.props.height,
         intensity: 0.5,
         size: this.props.width / 60
       }))

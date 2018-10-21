@@ -11,6 +11,8 @@ export const gameMapFromString = (input: string) => {
       return GameMaps.Erangel
     case 'Desert_Main':
       return GameMaps.Miramar
+    case 'Savage_Main':
+      return GameMaps.Sanhok
     default:
       return GameMaps.Unknown
   }
