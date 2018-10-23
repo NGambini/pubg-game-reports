@@ -16,6 +16,7 @@ import { Circle, PlanePath, PlayerStory } from 'state/matches/telemetry/computed
 import TeamInfo from './teaminfo/TeamInfo'
 import GameSummary from './summary/GameSummary'
 import Map from './map/Map'
+import PlayerStoryComponent from './playerStory/PlayerStory' // collides with model name
 
 import * as styles from './Game.scss'
 
@@ -99,7 +100,7 @@ export class Game extends React.Component<Props, State> {
           />
         </div>
         <div className="col-xs-12 col-sm-12 col-md-3">
-          player story here
+          <PlayerStoryComponent />
         </div>
       </div>
     </div>)
